@@ -12,15 +12,24 @@ namespace OnlineStore.DataAccess.Models
     {
         [Key]
         public Guid Id { get; set; }
+
         public string? Name { get; set; }
+
         public string? Description { get; set; }
+
         public int Quantity { get; set; }
+
         public double Price { get; set; }
+
         [ForeignKey(nameof(Store))]
+
         public Guid StoreId { get; set; }
+
         public Product? Store { get; set; }
+
         [ForeignKey(nameof(Purchase))]
         public Guid PurchaseId { get; set; }
+
         public Purchase? Purchase { get; set; }
     }
 }
