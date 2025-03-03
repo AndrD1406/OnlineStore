@@ -19,11 +19,12 @@ namespace OnlineStore
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddTransient<IJwtService, JwtService>();
-
+            var serverVersion = new MySqlServerVersion("8.0.39");
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+                options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), serverVersion,
+       options=> options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(2), null));
+        });
 
             // Enable identity 
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
