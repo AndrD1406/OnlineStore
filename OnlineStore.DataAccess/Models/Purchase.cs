@@ -19,5 +19,7 @@ namespace OnlineStore.DataAccess.Models
         public Guid UserId { get; set; }
 
         public ApplicationUser? User { get; set; }
+
+        public 
     }
 }
