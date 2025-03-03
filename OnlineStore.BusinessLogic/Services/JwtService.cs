@@ -37,7 +37,7 @@ namespace OnlineStore.BusinessLogic.Services
 					new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
 					// further fields are optional
 					new Claim(ClaimTypes.NameIdentifier, user.Email),
-                    new Claim(ClaimTypes.Name, user.PersonName),
+                    new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")
                 };
@@ -65,7 +65,7 @@ namespace OnlineStore.BusinessLogic.Services
             {
                 Token = token,
                 Email = user.Email,
-                PersonName = user.PersonName,
+                PersonName = user.Name,
                 Expiration = expiration,
                 RefreshToken = GenerateRefreshToken(),
                 //*here I changed Utc to UtcNow

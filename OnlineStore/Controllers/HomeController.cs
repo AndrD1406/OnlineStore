@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.BusinessLogic.Dtos;
@@ -8,7 +10,6 @@ using OnlineStore.Models;
 
 namespace OnlineStore.Controllers
 {
-    [Route("[controller]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -26,13 +27,15 @@ namespace OnlineStore.Controllers
             signInManager = signInMng;
             roleManager = roleMng;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
-
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return RedirectToAction(nameof(Register));
             return View();
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("[action]")]
         public IActionResult Register()
@@ -53,6 +56,8 @@ namespace OnlineStore.Controllers
 
             // Create user
             ApplicationUser user = new ApplicationUser() { Id=Guid.NewGuid(), Name=registerDto.Name, Email=registerDto.Email, PhoneNumber=registerDto.PhoneNumber};
+
+            user.UserName = registerDto.Name; ;
 
 
             IdentityResult result = null;
