@@ -15,7 +15,6 @@ namespace OnlineStore.DataAccess.Models
 
         [ForeignKey(nameof(ApplicationUser))]
         public Guid UserId { get; set; }
-
-        public ApplicationUser User { get; set; }
+        public ApplicationUser? User { get; set; }
     }
 }
