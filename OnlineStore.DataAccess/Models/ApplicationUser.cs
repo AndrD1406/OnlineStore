@@ -10,7 +10,7 @@ namespace OnlineStore.DataAccess.Models
 {
     public class ApplicationUser : IdentityUser<Guid>
     {
-        public string? PersonName { get; set; }
+        public string? Name { get; set; }
 
         public string? RefreshToken { get; set; }
 
