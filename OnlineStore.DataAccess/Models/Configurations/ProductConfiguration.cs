@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineStore.DataAccess.Repository.Base
+namespace OnlineStore.DataAccess.Models.Configurations
 {
-    internal class IEntityRepository
+    public class ProductConfiguration
     {
     }
 }

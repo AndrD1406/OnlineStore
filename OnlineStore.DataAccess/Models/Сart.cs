@@ -8,16 +8,13 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Models
 {
-    public class Purchase
+    public class Cart
     {
         [Key]
         public Guid Id { get; set; }
 
-        public IEnumerable<Product>? Products { get; set; }
-
         [ForeignKey(nameof(ApplicationUser))]
         public Guid UserId { get; set; }
-
         public ApplicationUser? User { get; set; }
     }
 }

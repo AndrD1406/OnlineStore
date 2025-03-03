@@ -6,8 +6,8 @@ namespace OnlineStore.BusinessLogic.Dtos
 {
     public class RegisterDto
     {
-        [Required(ErrorMessage = "Person Name can't be blank")]
-        public string PersonName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Name can't be blank")]
+        public string Name { get; set; } = string.Empty;
         [Required(ErrorMessage = "Email can't be blank")]
         [EmailAddress(ErrorMessage = "Email should be in a proper email address format")]
         public string Email { get; set; } = string.Empty;
@@ -19,7 +19,6 @@ namespace OnlineStore.BusinessLogic.Dtos
         [Required(ErrorMessage = "Confirm Password can't be blank")]
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Password and confirm password do not match")]
         public string ConfirmPassword { get; set; } = string.Empty;
-        [Required(ErrorMessage = "IsAdmin can't be blank")]
         public bool IsAdmin { get; set; } = false;
     }
 }
