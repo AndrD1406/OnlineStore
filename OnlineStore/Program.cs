@@ -22,9 +22,8 @@ namespace OnlineStore
             var serverVersion = new MySqlServerVersion("8.0.39");
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
             {
-                options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), serverVersion,
-       options=> options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(2), null));
-        });
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+            });
 
             // Enable identity 
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>

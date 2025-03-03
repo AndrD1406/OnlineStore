@@ -7,6 +7,8 @@ using OnlineStore.BusinessLogic.Dtos;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.DataAccess.Models;
 using OnlineStore.Models;
+using System.Web;
+using System.Net;
 
 namespace OnlineStore.Controllers
 {
@@ -30,6 +32,12 @@ namespace OnlineStore.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
+            var cookie = Request.Cookies["AuthToken"];
+            if (cookie != null)
+            {
+                return Content(jwtService.GetPrincipalFromJwtToken(cookie).ToString());
+            }
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 return RedirectToAction(nameof(Register));
@@ -57,7 +65,7 @@ namespace OnlineStore.Controllers
             // Create user
             ApplicationUser user = new ApplicationUser() { Id=Guid.NewGuid(), Name=registerDto.Name, Email=registerDto.Email, PhoneNumber=registerDto.PhoneNumber};
 
-            user.UserName = registerDto.Name; ;
+            user.UserName = registerDto.Email; ;
 
 
             IdentityResult result = null;
@@ -94,7 +102,16 @@ namespace OnlineStore.Controllers
                 user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
                 await userManager.UpdateAsync(user);
 
-                return Ok(authenticationResponse);
+                Cookie authCookie = new Cookie("AuthToken", authenticationResponse.Token)
+                {
+                    HttpOnly = true,
+                    Secure = true,    
+                    Expires = DateTime.Now.AddHours(1)
+                };
+
+                Response.Cookies.Append("AuthToken", authenticationResponse.Token);
+
+                return RedirectToAction(nameof(Index), null,authenticationResponse.Token);
             }
 
             string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));

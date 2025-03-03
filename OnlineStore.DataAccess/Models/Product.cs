@@ -25,7 +25,7 @@ namespace OnlineStore.DataAccess.Models
 
         public Guid StoreId { get; set; }
 
-        public Product? Store { get; set; }
+        public Store? Store { get; set; }
 
         [ForeignKey(nameof(Purchase))]
         public Guid PurchaseId { get; set; }

@@ -11,10 +11,10 @@ namespace OnlineStore.DataAccess
 {
     public class OnlineStoreDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
-        public DbSet<Product> Menus { get; set; }
-        public DbSet<Purchase> MenuPools { get; set; }
-        public DbSet<Store> Restaurants { get; set; }
-        public DbSet<Cart> Cart { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<Store> Stores { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public OnlineStoreDbContext(DbContextOptions options) : base(options)
         {
 
