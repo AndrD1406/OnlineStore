@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Models.Configurations
 {
-    public class Purchase
+    public class PurchaseConfiguration
     {
 
     }
