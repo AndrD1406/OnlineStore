@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineStore.DataAccess;
 using OnlineStore.DataAccess.Models;
+using OnlineStore.DataAccess.Repository.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,14 @@ namespace OnlineStore.BusinessLogic.Services
 {
     public class ProductService : IProductService
     {
-        private readonly OnlineStoreDbContext context;
-        public ProductService(OnlineStoreDbContext dbContext)
+        private readonly EntityRepository<Guid, Product> repository;
+        public ProductService(EntityRepository<Guid, Product> repository)
         {
-            context = dbContext;
+            this.repository = repository;
         }
         public async Task<IEnumerable<Product>> GetProductsByStore(Guid storeId)
         {
-            return await context.Products.Where(x => x.StoreId == storeId).ToListAsync();
+            return await repository.GetByFilter(x => x.StoreId == storeId);
         }
     }
 }
