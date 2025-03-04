@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Models
 {
-    public class Product
+    public class Product: IKeyedEntity<Guid>
     {
         [Key]
         public Guid Id { get; set; }
