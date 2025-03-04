@@ -27,5 +27,14 @@ namespace OnlineStore.BusinessLogic.Services
         {
             return await repository.GetByFilter(x => x.StoreId == storeId);
         }
+
+        public async Task<Product> UpdateProduct(Guid productId, Product product)
+        {
+            var productToUpdate = await this.repository.GetById(productId);
+
+            var updatedProduct = await this.repository.Update(productToUpdate);
+
+            return updatedProduct;
+        }
     }
 }
