@@ -17,6 +17,12 @@ namespace OnlineStore.BusinessLogic.Services
         {
             this.repository = repository;
         }
+
+        public async Task<IEnumerable<Product>> GetProducts()
+        {
+            return await repository.GetAll();
+        }
+
         public async Task<IEnumerable<Product>> GetProductsByStore(Guid storeId)
         {
             return await repository.GetByFilter(x => x.StoreId == storeId);

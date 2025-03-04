@@ -11,5 +11,6 @@ namespace OnlineStore.BusinessLogic.Services
     public interface IProductService
     {
         Task<IEnumerable<Product>> GetProductsByStore(Guid storeId);
+        Task<IEnumerable<Product>> GetProducts();
     }
 }
