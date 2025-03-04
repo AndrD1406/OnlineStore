@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.DataAccess.Models;
+using OnlineStore.DataAccess.Models.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace OnlineStore.DataAccess
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

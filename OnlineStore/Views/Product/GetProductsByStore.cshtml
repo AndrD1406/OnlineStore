@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewBag.Title = "Products";
+}
+    <h1>@ViewBag.Title</h1>
+    <table class="table w-100 mt persons">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Quantity</td>
+                <td>Price</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Product product in @Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Quantity</td>
+                    <td>@product.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineStore.DataAccess;
 
@@ -11,9 +12,11 @@ using OnlineStore.DataAccess;
 namespace OnlineStore.DataAccess.Migrations
 {
     [DbContext(typeof(OnlineStoreDbContext))]
-    partial class OnlineStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250304073415_SeedProduct")]
+    partial class SeedProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,28 +281,6 @@ namespace OnlineStore.DataAccess.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("1109a562-aa69-4d01-8eba-10175eeaad5c"),
-                            Description = "tasty tomatoes",
-                            Name = "Tomato",
-                            Price = 50.0,
-                            PurchaseId = new Guid("00000000-0000-0000-0000-000000000000"),
-                            Quantity = 10,
-                            StoreId = new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d")
-                        },
-                        new
-                        {
-                            Id = new Guid("74757949-c32b-44ea-a7d0-0bf457b8a90e"),
-                            Description = "tasty cucumbers",
-                            Name = "Cucumber",
-                            Price = 30.0,
-                            PurchaseId = new Guid("00000000-0000-0000-0000-000000000000"),
-                            Quantity = 20,
-                            StoreId = new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d")
-                        });
                 });
 
             modelBuilder.Entity("OnlineStore.DataAccess.Models.Purchase", b =>
