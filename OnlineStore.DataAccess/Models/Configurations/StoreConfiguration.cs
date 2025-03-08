@@ -12,7 +12,7 @@ namespace OnlineStore.DataAccess.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Store> builder)
         {
-            throw new NotImplementedException();
+            builder.HasData(new Store() { Id = Guid.Parse("52FDF31C-27C4-498B-BAD3-D56394B8D51D") });
         }
     }
 }

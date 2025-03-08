@@ -23,6 +23,8 @@ namespace OnlineStore.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new StoreConfiguration());
+            modelBuilder.ApplyConfiguration(new PurchaseConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
