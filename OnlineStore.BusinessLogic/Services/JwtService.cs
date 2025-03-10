@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using OnlineStore.BusinessLogic.Dtos;
 using OnlineStore.DataAccess.Models;
+using OnlineStore.BusinessLogic.Services.Interfaces;
 
 namespace OnlineStore.BusinessLogic.Services
 {

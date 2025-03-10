@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Repository.Base;
 
-public class EntityRepository <TKey, TEntity>
+public class EntityRepository <TKey, TEntity>: IEntityRepository<TKey, TEntity>
     where TEntity : class, IKeyedEntity<TKey>, new()
     where TKey : IEquatable<TKey>
 {

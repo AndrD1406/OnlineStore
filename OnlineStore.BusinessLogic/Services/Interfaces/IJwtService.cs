@@ -2,7 +2,7 @@
 using OnlineStore.DataAccess.Models;
 using System.Security.Claims;
 
-namespace OnlineStore.BusinessLogic.Services
+namespace OnlineStore.BusinessLogic.Services.Interfaces
 {
 	public interface IJwtService
 	{

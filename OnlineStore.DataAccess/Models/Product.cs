@@ -31,5 +31,9 @@ namespace OnlineStore.DataAccess.Models
         public Guid PurchaseId { get; set; }
 
         public Purchase? Purchase { get; set; }
+
+        public Product()
+        {
+        }
     }
 }

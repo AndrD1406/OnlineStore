@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess;
 using OnlineStore.DataAccess.Models;
 using OnlineStore.DataAccess.Repository.Base;
@@ -12,8 +13,8 @@ namespace OnlineStore.BusinessLogic.Services
 {
     public class ProductService : IProductService
     {
-        private readonly EntityRepository<Guid, Product> repository;
-        public ProductService(EntityRepository<Guid, Product> repository)
+        private readonly IEntityRepository<Guid, Product> repository;
+        public ProductService(IEntityRepository<Guid, Product> repository)
         {
             this.repository = repository;
         }

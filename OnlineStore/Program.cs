@@ -6,6 +6,9 @@ using OnlineStore.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using OnlineStore.BusinessLogic.Services.Interfaces;
+using Org.BouncyCastle.Asn1.X509.Qualified;
+using OnlineStore.DataAccess.Repository.Base;
 
 namespace OnlineStore
 {
@@ -18,6 +21,8 @@ namespace OnlineStore
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddScoped<Product>(provider => new Product());
+            builder.Services.AddScoped(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
             builder.Services.AddTransient<IJwtService, JwtService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>

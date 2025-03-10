@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineStore.BusinessLogic.Services
+namespace OnlineStore.BusinessLogic.Services.Interfaces
 {
     public interface IProductService
     {

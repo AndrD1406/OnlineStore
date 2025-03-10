@@ -9,6 +9,7 @@ using OnlineStore.DataAccess.Models;
 using OnlineStore.Models;
 using System.Web;
 using System.Net;
+using OnlineStore.BusinessLogic.Services.Interfaces;
 
 namespace OnlineStore.Controllers
 {
