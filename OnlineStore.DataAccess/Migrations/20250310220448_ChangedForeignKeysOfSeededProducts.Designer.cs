@@ -12,8 +12,8 @@ using OnlineStore.DataAccess;
 namespace OnlineStore.DataAccess.Migrations
 {
     [DbContext(typeof(OnlineStoreDbContext))]
-    [Migration("20250304073509_SeedProduct1")]
-    partial class SeedProduct1
+    [Migration("20250310220448_ChangedForeignKeysOfSeededProducts")]
+    partial class ChangedForeignKeysOfSeededProducts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,7 +289,7 @@ namespace OnlineStore.DataAccess.Migrations
                             Description = "tasty tomatoes",
                             Name = "Tomato",
                             Price = 50.0,
-                            PurchaseId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            PurchaseId = new Guid("df44d370-e174-4426-a52e-58a260f704eb"),
                             Quantity = 10,
                             StoreId = new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d")
                         },
@@ -299,7 +299,7 @@ namespace OnlineStore.DataAccess.Migrations
                             Description = "tasty cucumbers",
                             Name = "Cucumber",
                             Price = 30.0,
-                            PurchaseId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            PurchaseId = new Guid("df44d370-e174-4426-a52e-58a260f704eb"),
                             Quantity = 20,
                             StoreId = new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d")
                         });
@@ -319,6 +319,13 @@ namespace OnlineStore.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Purchases");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("df44d370-e174-4426-a52e-58a260f704eb"),
+                            UserId = new Guid("20da6577-ab76-47fc-a95a-22797094634c")
+                        });
                 });
 
             modelBuilder.Entity("OnlineStore.DataAccess.Models.Store", b =>
@@ -333,6 +340,12 @@ namespace OnlineStore.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Stores");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

@@ -5,6 +5,7 @@ using OnlineStore.DataAccess.Models;
 
 namespace OnlineStore.Controllers
 {
+    [Route("[controller]/[action]")]
     public class ProductController : Controller
     {
         private readonly ILogger<HomeController> _logger;
