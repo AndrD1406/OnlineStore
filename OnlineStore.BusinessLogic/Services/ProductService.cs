@@ -13,29 +13,30 @@ namespace OnlineStore.BusinessLogic.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IEntityRepository<Guid, Product> repository;
-        public ProductService(IEntityRepository<Guid, Product> repository)
+        //private readonly IEntityRepository<Guid, Product> repository;
+        private readonly OnlineStoreDbContext context;
+        public ProductService(OnlineStoreDbContext dbContext)
         {
-            this.repository = repository;
+            context = dbContext;
         }
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            return await repository.GetAll();
+            return await context.Products.ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductsByStore(Guid storeId)
         {
-            return await repository.GetByFilter(x => x.StoreId == storeId);
+            return await context.Products.Where(x => x.StoreId == storeId).ToListAsync();
         }
 
-        public async Task<Product> UpdateProduct(Guid productId, Product product)
-        {
-            var productToUpdate = await this.repository.GetById(productId);
+        //public async Task<Product> UpdateProduct(Guid productId, Product product)
+        //{
+        //    var productToUpdate = await context.Products.FirstOrDefaultAsync(x=>x.Id == productId);
 
-            var updatedProduct = await this.repository.Update(productToUpdate);
+        //    var updatedProduct = await this.repository.Update(productToUpdate);
 
-            return updatedProduct;
-        }
+        //    return updatedProduct;
+        //}
     }
 }

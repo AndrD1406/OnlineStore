@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
+using System.Runtime.CompilerServices;
 
 namespace OnlineStore.Controllers
 {
@@ -17,11 +18,14 @@ namespace OnlineStore.Controllers
             _logger = logger;
             productService = prdService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await productService.GetProducts();
+
+            return View(nameof(GetProductsByStore), products);
         }
         [HttpGet]
+        [Route("{storeId}")]
         public async Task<IActionResult> GetProductsByStore(Guid storeId)
         {
             var products = await productService.GetProductsByStore(storeId);

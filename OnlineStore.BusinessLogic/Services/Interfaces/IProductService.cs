@@ -14,6 +14,6 @@ namespace OnlineStore.BusinessLogic.Services.Interfaces
 
         Task<IEnumerable<Product>> GetProducts();
 
-        Task<Product> UpdateProduct(Guid productId, Product product);
+        //Task<Product> UpdateProduct(Guid productId, Product product);
     }
 }
