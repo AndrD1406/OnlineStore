@@ -20,7 +20,7 @@ public class EntityRepository <TKey, TEntity>: IEntityRepository<TKey, TEntity>
     public readonly OnlineStoreDbContext dbContext;
     public readonly DbSet<TEntity> dbSet;
 
-    protected EntityRepository(OnlineStoreDbContext dbContext)
+    public EntityRepository(OnlineStoreDbContext dbContext): base()
     {
         this.dbContext = dbContext;
         dbSet = this.dbContext.Set<TEntity>();
