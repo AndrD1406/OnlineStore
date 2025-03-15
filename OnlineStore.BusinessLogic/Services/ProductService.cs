@@ -6,6 +6,7 @@ using OnlineStore.DataAccess.Repository.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,14 +20,19 @@ namespace OnlineStore.BusinessLogic.Services
             this.repository = repository;
         }
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<Product>> GetAll()
         {
             return await this.repository.GetAll();
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByStore(Guid storeId)
+        public async Task<IEnumerable<Product>> GetByStore(Guid storeId)
         {
             return await repository.GetByFilter(x => x.StoreId == storeId);
+        }
+
+        public async Task<IEnumerable<Product>> Filter(Expression<Func<Product, bool>> expression)
+        {
+            return await repository.GetByFilter(expression, nameof(Product.Store));
         }
 
         //public async Task<Product> UpdateProduct(Guid productId, Product product)

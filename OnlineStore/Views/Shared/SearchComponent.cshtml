@@ -1,0 +1,20 @@
+﻿<div class="box searchRow">
+    <input name="product" class="form-input searchInput h-50" placeholder="enter name of product"/>
+    <select name="storeId" class="form-input searchSelector h-50">
+        @foreach (Store store in ViewBag?.Stores)
+        { 
+            if(store.Id == ViewBag?.storeId)
+            {
+                <option value="@store.Id" selected="selected">@store.Name</option>
+            }
+            else 
+            {
+                <option value="@store.Id">@store.Name</option>
+            }
+        }
+    </select>
+    <div class="searchButtons">
+        <button class="button button-blue-back searchButton">Search</button>
+        <a href="~/onlinestore/product/index" class="link-hover clearFiltersLabel">Clear all</a>
+    </div>
+</div>
