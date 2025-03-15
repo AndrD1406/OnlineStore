@@ -14,10 +14,8 @@ namespace OnlineStore.BusinessLogic.Services
     public class ProductService : IProductService
     {
         private readonly IEntityRepository<Guid, Product> repository;
-        private readonly OnlineStoreDbContext context;
-        public ProductService(IEntityRepository<Guid, Product> repository, OnlineStoreDbContext dbContext)
+        public ProductService(IEntityRepository<Guid, Product> repository)
         {
-            context = dbContext;
             this.repository = repository;
         }
 
@@ -28,7 +26,7 @@ namespace OnlineStore.BusinessLogic.Services
 
         public async Task<IEnumerable<Product>> GetProductsByStore(Guid storeId)
         {
-            return await context.Products.Where(x => x.StoreId == storeId).ToListAsync();
+            return await repository.GetByFilter(x => x.StoreId == storeId);
         }
 
         //public async Task<Product> UpdateProduct(Guid productId, Product product)
