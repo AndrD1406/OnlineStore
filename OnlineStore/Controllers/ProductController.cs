@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace OnlineStore.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("onlinestore/[controller]/[action]")]
     public class ProductController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -22,14 +22,14 @@ namespace OnlineStore.Controllers
         {
             var products = await productService.GetProducts();
 
-            return View(nameof(GetProductsByStore), products);
+            return View(products);
         }
         [HttpGet]
         [Route("{storeId}")]
         public async Task<IActionResult> GetProductsByStore(Guid storeId)
         {
             var products = await productService.GetProductsByStore(storeId);
-            return View(products);
+            return View(nameof(GetProductsByStore), products);
         }
     }
 }

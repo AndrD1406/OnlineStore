@@ -262,7 +262,7 @@ namespace OnlineStore.DataAccess.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("PurchaseId")
+                    b.Property<Guid?>("PurchaseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
@@ -286,7 +286,6 @@ namespace OnlineStore.DataAccess.Migrations
                             Description = "tasty tomatoes",
                             Name = "Tomato",
                             Price = 50.0,
-                            PurchaseId = new Guid("df44d370-e174-4426-a52e-58a260f704eb"),
                             Quantity = 10,
                             StoreId = new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d")
                         },
@@ -296,7 +295,6 @@ namespace OnlineStore.DataAccess.Migrations
                             Description = "tasty cucumbers",
                             Name = "Cucumber",
                             Price = 30.0,
-                            PurchaseId = new Guid("df44d370-e174-4426-a52e-58a260f704eb"),
                             Quantity = 20,
                             StoreId = new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d")
                         });
@@ -316,13 +314,6 @@ namespace OnlineStore.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Purchases");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("df44d370-e174-4426-a52e-58a260f704eb"),
-                            UserId = new Guid("20da6577-ab76-47fc-a95a-22797094634c")
-                        });
                 });
 
             modelBuilder.Entity("OnlineStore.DataAccess.Models.Store", b =>
@@ -411,9 +402,7 @@ namespace OnlineStore.DataAccess.Migrations
                 {
                     b.HasOne("OnlineStore.DataAccess.Models.Purchase", "Purchase")
                         .WithMany("Products")
-                        .HasForeignKey("PurchaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PurchaseId");
 
                     b.HasOne("OnlineStore.DataAccess.Models.Store", "Store")
                         .WithMany("Products")

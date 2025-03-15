@@ -13,6 +13,7 @@ using OnlineStore.BusinessLogic.Services.Interfaces;
 
 namespace OnlineStore.Controllers
 {
+    [Route("onlinestore/[controller]/[action]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -46,14 +47,12 @@ namespace OnlineStore.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        [Route("[action]")]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        [Route("[action]")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             // Validation 

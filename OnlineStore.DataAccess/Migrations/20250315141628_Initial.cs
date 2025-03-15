@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace OnlineStore.DataAccess.Migrations
 {
     /// <inheritdoc />
@@ -218,7 +220,7 @@ namespace OnlineStore.DataAccess.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PurchaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PurchaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -227,14 +229,27 @@ namespace OnlineStore.DataAccess.Migrations
                         name: "FK_Products_Purchases_PurchaseId",
                         column: x => x.PurchaseId,
                         principalTable: "Purchases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Products_Stores_StoreId",
                         column: x => x.StoreId,
                         principalTable: "Stores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Stores",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d"), null });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "Description", "Name", "Price", "PurchaseId", "Quantity", "StoreId" },
+                values: new object[,]
+                {
+                    { new Guid("1109a562-aa69-4d01-8eba-10175eeaad5c"), "tasty tomatoes", "Tomato", 50.0, null, 10, new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d") },
+                    { new Guid("74757949-c32b-44ea-a7d0-0bf457b8a90e"), "tasty cucumbers", "Cucumber", 30.0, null, 20, new Guid("52fdf31c-27c4-498b-bad3-d56394b8d51d") }
                 });
 
             migrationBuilder.CreateIndex(
