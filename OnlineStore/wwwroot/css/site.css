@@ -419,3 +419,33 @@ a.link-hover:hover {
         background-color: #007bff;
         border-radius: 5px;
     }
+
+.searchRow {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.searchInput {
+    width: 25%;
+}
+
+.searchSelector {
+    width: 25%;
+}
+
+.searchButtons {
+    display: flex;
+    justify-content: flex-end;
+    width: 40%;
+    align-self: flex-start;
+}
+
+.searchButton {
+    height: 40px;
+    width: 120px;
+}
+
+.clearFiltersLabel {
+    margin-left: 50px;
+}

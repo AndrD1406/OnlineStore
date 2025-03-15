@@ -21,10 +21,10 @@ namespace OnlineStore
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            //builder.Services.AddScoped<Product>(provider => new Product());
             builder.Services.AddScoped(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
             builder.Services.AddTransient<IJwtService, JwtService>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IStoreService, StoreService>();
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));

@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Models
 {
-    public class Store
+    public class Store : IKeyedEntity<Guid>
     {
         [Key]
         public Guid Id { get; set; }
         public string? Name { get; set; }
         public IEnumerable<Product>? Products { get; set; }
+
+        public Store()
+        {
+            
+        }
     }
 }
