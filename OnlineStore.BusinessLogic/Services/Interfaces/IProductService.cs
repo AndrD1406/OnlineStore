@@ -13,9 +13,12 @@ namespace OnlineStore.BusinessLogic.Services.Interfaces
     {
         Task<IEnumerable<Product>> GetByStore(Guid storeId);
 
+        Task<Product> Create(Product product);
+
         Task<IEnumerable<Product>> GetAll();
+
         Task<IEnumerable<Product>> Filter(Expression<Func<Product, bool>> expression);
 
-        //Task<Product> UpdateProduct(Guid productId, Product product);
+        Task<Product> UpdateProduct(Guid productId, Product product);
     }
 }
