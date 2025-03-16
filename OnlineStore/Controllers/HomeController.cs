@@ -89,10 +89,16 @@ namespace OnlineStore.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
                 await signInManager.SignInAsync(user, isPersistent: true);
                 await userManager.UpdateAsync(user);
+                return RedirectToAction("Index", "Product");
             }
 
             string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
             return Problem(errorMessage);
+        }
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)

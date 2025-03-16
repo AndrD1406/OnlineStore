@@ -44,8 +44,8 @@ namespace OnlineStore
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                options.LoginPath = "/Home/Register";
-                options.AccessDeniedPath = "/Home/Register";
+                options.LoginPath = "/Home/Login";
+                options.AccessDeniedPath = "/Home/Login";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.ExpireTimeSpan = TimeSpan.FromHours(Convert.ToDouble(builder.Configuration["Expires"]));
                 options.SlidingExpiration = false;
