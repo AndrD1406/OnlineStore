@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace OnlineStore.Controllers
 {
-    [Route("onlinestore/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     public class ProductController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -24,6 +24,11 @@ namespace OnlineStore.Controllers
         }
         public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
         {
+            var accessToken = Request.Cookies["AccessToken"];
+            if(accessToken == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             var stores = await storeService.GetAll();
             ViewBag.Stores = stores;
             var products = await productService.Filter(x => product != null ? x.Name.ToLower().Contains(product.ToLower()) : true && storeId != null ? x.StoreId == storeId : true && price != null ? x.Price <= price : true);
