@@ -19,14 +19,13 @@ public class OnlineStoreDbContext : IdentityDbContext<ApplicationUser, Applicati
     public OnlineStoreDbContext(DbContextOptions options) : base(options)
     {
 
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new ProductConfiguration());
-            modelBuilder.ApplyConfiguration(new StoreConfiguration());
-            modelBuilder.ApplyConfiguration(new PurchaseConfiguration());
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
-            base.OnModelCreating(modelBuilder);
-        }
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new ProductConfiguration());
+        modelBuilder.ApplyConfiguration(new StoreConfiguration());
+        modelBuilder.ApplyConfiguration(new PurchaseConfiguration());
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        base.OnModelCreating(modelBuilder);
     }
 }

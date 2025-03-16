@@ -17,26 +17,25 @@ public class ProductController : Controller
     private readonly IProductService productService;
     private readonly IStoreService storeService;
 
-        public ProductController(ILogger<HomeController> logger, IProductService prdService, IStoreService strService)
-        {
-            _logger = logger;
-            productService = prdService;
-            storeService = strService;
-        }
-        [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
-        {
-            var stores = await storeService.GetAll();
-            ViewBag.Stores = stores;
-            var products = await productService.Filter(x => product != null ? x.Name.ToLower().Contains(product.ToLower()) : true && storeId != null ? x.StoreId == storeId : true && price != null ? x.Price <= price : true);
-            return View(products);
-        }
-        [HttpGet]
-        [Route("{storeId}")]
-        public async Task<IActionResult> GetProductsByStore(Guid storeId)
-        {
-            var products = await productService.GetByStore(storeId);
-            return View(nameof(GetProductsByStore), products);
-        }
+    public ProductController(ILogger<HomeController> logger, IProductService prdService, IStoreService strService)
+    {
+        _logger = logger;
+        productService = prdService;
+        storeService = strService;
+    }
+    [HttpGet]
+    public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
+    {
+        var stores = await storeService.GetAll();
+        ViewBag.Stores = stores;
+        var products = await productService.Filter(x => product != null ? x.Name.ToLower().Contains(product.ToLower()) : true && storeId != null ? x.StoreId == storeId : true && price != null ? x.Price <= price : true);
+        return View(products);
+    }
+    [HttpGet]
+    [Route("{storeId}")]
+    public async Task<IActionResult> GetProductsByStore(Guid storeId)
+    {
+        var products = await productService.GetByStore(storeId);
+        return View(nameof(GetProductsByStore), products);
     }
 }
