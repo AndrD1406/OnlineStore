@@ -135,6 +135,11 @@ namespace OnlineStore.Controllers
             }
             return Problem("Invalid email or password");
         }
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Product");
+        }
         public IActionResult Privacy()
         {
             return View();
