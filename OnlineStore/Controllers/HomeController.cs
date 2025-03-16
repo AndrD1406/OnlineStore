@@ -137,7 +137,7 @@ namespace OnlineStore.Controllers
         }
         public async Task<IActionResult> LogOut()
         {
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Product");
         }
         public IActionResult Privacy()
