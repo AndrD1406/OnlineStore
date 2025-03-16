@@ -86,8 +86,8 @@ namespace OnlineStore.Controllers
                     new Claim(ClaimTypes.Role, registerDto.IsAdmin ? "Admin" : "User")
                 };
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
-                await signInManager.SignInAsync(user, isPersistent: true);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = false });
+                await signInManager.SignInAsync(user, isPersistent: false);
                 await userManager.UpdateAsync(user);
                 return RedirectToAction("Index", "Product");
             }
@@ -110,7 +110,7 @@ namespace OnlineStore.Controllers
                 return Problem(errorMessages);
             }
 
-            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: true, lockoutOnFailure: false);
+            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
@@ -119,7 +119,7 @@ namespace OnlineStore.Controllers
                 if (user == null)
                     return NoContent();
 
-                await signInManager.SignInAsync(user, isPersistent: true);
+                await signInManager.SignInAsync(user, isPersistent: false);
                 await userManager.UpdateAsync(user);
 
                 var roles = await userManager.GetRolesAsync(user);
@@ -130,10 +130,15 @@ namespace OnlineStore.Controllers
                     new Claim(ClaimTypes.Role,  roles.FirstOrDefault())
                 };
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = false });
                 return RedirectToAction("Index", "Product");
             }
             return Problem("Invalid email or password");
+        }
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Product");
         }
         public IActionResult Privacy()
         {
