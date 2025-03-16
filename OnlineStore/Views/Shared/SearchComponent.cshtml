@@ -1,18 +1,20 @@
 ﻿<div class="box searchRow">
-    <input name="product" class="form-input searchInput h-50" placeholder="enter name of product"/>
+    <input name="product" class="form-input searchInput h-50" value="@ViewBag.product" placeholder="enter name of product"/>
     <select name="storeId" class="form-input searchSelector h-50">
+        <option value="@null">Select store</option>
         @foreach (Store store in ViewBag?.Stores)
         { 
             if(store.Id == ViewBag?.storeId)
             {
-                <option value="@store.Id" selected="selected">@store.Name</option>
+                <option value="@store.Id" selected>@store.Name</option>
             }
-            else 
+            else
             {
                 <option value="@store.Id">@store.Name</option>
             }
         }
     </select>
+    <input name="price" class="form-input priceInput h-50" value="@ViewBag.price" type="number" />
     <div class="searchButtons">
         <button class="button button-blue-back searchButton">Search</button>
         <a href="~/product/index" class="link-hover clearFiltersLabel">Clear all</a>
