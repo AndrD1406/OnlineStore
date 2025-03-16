@@ -52,13 +52,8 @@ namespace OnlineStore.Controllers
                 string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
                 return Problem(errorMessages);
             }
-            //return RedirectToAction(actionName: "Index", controllerName: "Product", null);
 
-            // Create user
-            ApplicationUser user = new ApplicationUser() { Id=Guid.NewGuid(), Name=registerDto.Name, Email=registerDto.Email, PhoneNumber=registerDto.PhoneNumber};
-
-            user.UserName = registerDto.Email;
-
+            ApplicationUser user = new ApplicationUser() { Id = Guid.NewGuid(), Name = registerDto.Name, Email = registerDto.Email, PhoneNumber = registerDto.PhoneNumber, UserName = registerDto.Email };
 
             IdentityResult result = null;
             try
@@ -82,24 +77,58 @@ namespace OnlineStore.Controllers
                 Console.WriteLine(exc.Message);
             }
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, registerDto.Email), new Claim(ClaimTypes.Name, registerDto.Email, ClaimTypes.Role, registerDto.IsAdmin ? "Admin" : "User") };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties()
-            {
-                IsPersistent = true,
-
-            });
-
             if (result.Succeeded)
             {
-                await signInManager.SignInAsync(user, isPersistent: false);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, registerDto.IsAdmin ? "Admin" : "User")
+                };
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
+                await signInManager.SignInAsync(user, isPersistent: true);
                 await userManager.UpdateAsync(user);
             }
 
             string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
             return Problem(errorMessage);
         }
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            // Validation 
+            if (!ModelState.IsValid)
+            {
+                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessages);
+            }
 
+            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: true, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                ApplicationUser? user = await userManager.FindByEmailAsync(loginDto.Email);
+
+                if (user == null)
+                    return NoContent();
+
+                await signInManager.SignInAsync(user, isPersistent: true);
+                await userManager.UpdateAsync(user);
+                
+                var roles = await userManager.GetRolesAsync(user);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email), 
+                    new Claim(ClaimTypes.Role,  roles.FirstOrDefault())
+                };
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
+                return RedirectToAction("Index", "Product");
+            }
+            return Problem("Invalid email or password");
+        }
         public IActionResult Privacy()
         {
             return View();
