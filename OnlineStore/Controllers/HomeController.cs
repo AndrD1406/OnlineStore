@@ -13,7 +13,7 @@ using OnlineStore.BusinessLogic.Services.Interfaces;
 
 namespace OnlineStore.Controllers
 {
-    [Route("onlinestore/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -31,21 +31,15 @@ namespace OnlineStore.Controllers
             signInManager = signInMng;
             roleManager = roleMng;
         }
-        [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
-            var cookie = Request.Cookies["AuthToken"];
-            if (cookie != null)
-            {
-                return Content(jwtService.GetPrincipalFromJwtToken(cookie).ToString());
-            }
+            var accessToken = Request.Cookies["AccessToken"];
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
+            if (accessToken == null)
                 return RedirectToAction(nameof(Register));
             return View();
         }
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
@@ -65,7 +59,7 @@ namespace OnlineStore.Controllers
             // Create user
             ApplicationUser user = new ApplicationUser() { Id=Guid.NewGuid(), Name=registerDto.Name, Email=registerDto.Email, PhoneNumber=registerDto.PhoneNumber};
 
-            user.UserName = registerDto.Email; ;
+            user.UserName = registerDto.Email;
 
 
             IdentityResult result = null;
@@ -102,16 +96,9 @@ namespace OnlineStore.Controllers
                 user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
                 await userManager.UpdateAsync(user);
 
-                Cookie authCookie = new Cookie("AuthToken", authenticationResponse.Token)
-                {
-                    HttpOnly = true,
-                    Secure = true,    
-                    Expires = DateTime.Now.AddHours(1)
-                };
+                Response.Cookies.Append("AccessToken", authenticationResponse.Token);
 
-                Response.Cookies.Append("AuthToken", authenticationResponse.Token);
-
-                return RedirectToAction(nameof(Index), null,authenticationResponse.Token);
+                return RedirectToAction(nameof(Index), null, authenticationResponse?.Token);
             }
 
             string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
