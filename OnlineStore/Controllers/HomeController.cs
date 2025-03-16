@@ -135,6 +135,7 @@ namespace OnlineStore.Controllers
             }
             return Problem("Invalid email or password");
         }
+        [Authorize]
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
