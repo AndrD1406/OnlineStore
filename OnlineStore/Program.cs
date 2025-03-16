@@ -24,7 +24,6 @@ namespace OnlineStore
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
-            builder.Services.AddTransient<IJwtService, JwtService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IStoreService, StoreService>();
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>

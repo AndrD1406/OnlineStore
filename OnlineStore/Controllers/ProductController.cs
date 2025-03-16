@@ -25,7 +25,6 @@ namespace OnlineStore.Controllers
             storeService = strService;
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
         {
             var stores = await storeService.GetAll();

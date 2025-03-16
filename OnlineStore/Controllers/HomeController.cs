@@ -20,16 +20,14 @@ namespace OnlineStore.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IJwtService jwtService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly RoleManager<ApplicationRole> roleManager;
 
         public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userMng,
-            SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng, IJwtService _jwtService)
+            SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng)
         {
             _logger = logger;
-            jwtService = _jwtService;
             userManager = userMng;
             signInManager = signInMng;
             roleManager = roleMng;
@@ -94,14 +92,7 @@ namespace OnlineStore.Controllers
 
             if (result.Succeeded)
             {
-                // sign-in
-                // isPersister: false - must be deleted automatically when the browser is closed
                 await signInManager.SignInAsync(user, isPersistent: false);
-
-                //var authenticationResponse = jwtService.CreateJwtToken(user);
-                //user.RefreshToken = authenticationResponse.RefreshToken;
-
-                //user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
                 await userManager.UpdateAsync(user);
             }
 
