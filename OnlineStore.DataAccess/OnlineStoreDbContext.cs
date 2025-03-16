@@ -25,6 +25,7 @@ public class OnlineStoreDbContext : IdentityDbContext<ApplicationUser, Applicati
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
         modelBuilder.ApplyConfiguration(new StoreConfiguration());
         modelBuilder.ApplyConfiguration(new PurchaseConfiguration());
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }

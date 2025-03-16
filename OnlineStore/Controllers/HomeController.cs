@@ -10,109 +10,140 @@ using OnlineStore.Models;
 using System.Web;
 using System.Net;
 using OnlineStore.BusinessLogic.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace OnlineStore.Controllers;
-
-[Route("[controller]/[action]")]
-public class HomeController : Controller
+namespace OnlineStore.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly IJwtService jwtService;
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly SignInManager<ApplicationUser> signInManager;
-    private readonly RoleManager<ApplicationRole> roleManager;
+    [Route("[controller]/[action]")]
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly RoleManager<ApplicationRole> roleManager;
 
-    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userMng,
-        SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng, IJwtService _jwtService)
-    {
-        _logger = logger;
-        jwtService = _jwtService;
-        userManager = userMng;
-        signInManager = signInMng;
-        roleManager = roleMng;
-    }
-    [HttpGet]
-    public IActionResult Index()
-    {
-        var accessToken = Request.Cookies["AccessToken"];
-
-        if (accessToken == null)
-            return RedirectToAction(nameof(Register));
-        return View();
-    }
-    [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Register(RegisterDto registerDto)
-    {
-        // Validation 
-        if (!ModelState.IsValid)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userMng,
+            SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng)
         {
-            string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
-            return Problem(errorMessages);
+            _logger = logger;
+            userManager = userMng;
+            signInManager = signInMng;
+            roleManager = roleMng;
+        }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
         }
 
-        // Create user
-        ApplicationUser user = new ApplicationUser() { Id=Guid.NewGuid(), Name=registerDto.Name, Email=registerDto.Email, PhoneNumber=registerDto.PhoneNumber};
-
-        user.UserName = registerDto.Email;
-
-
-        IdentityResult result = null;
-        try
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            result = await userManager.CreateAsync(user, registerDto.Password);
+            // Validation 
+            if (!ModelState.IsValid)
+            {
+                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessages);
+            }
+
+            ApplicationUser user = new ApplicationUser() { Id = Guid.NewGuid(), Name = registerDto.Name, Email = registerDto.Email, PhoneNumber = registerDto.PhoneNumber, UserName = registerDto.Email };
+
+            IdentityResult result = null;
+            try
+            {
+                result = await userManager.CreateAsync(user, registerDto.Password);
+
+                if (result.Succeeded)
+                {
+                    if (registerDto.IsAdmin)
+                    {
+                        await userManager.AddToRoleAsync(user, "Admin");
+                    }
+                    else
+                    {
+                        await userManager.AddToRoleAsync(user, "User");
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
 
             if (result.Succeeded)
             {
-                if (registerDto.IsAdmin)
+                var claims = new List<Claim>
                 {
-                    await userManager.AddToRoleAsync(user, "Admin");
-                }
-                else
-                {
-                    await userManager.AddToRoleAsync(user, "User");
-                }
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, registerDto.IsAdmin ? "Admin" : "User")
+                };
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
+                await signInManager.SignInAsync(user, isPersistent: true);
+                await userManager.UpdateAsync(user);
+                return RedirectToAction("Index", "Product");
             }
+
+            string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
+            return Problem(errorMessage);
         }
-        catch (Exception exc)
+        [HttpGet]
+        public IActionResult Login()
         {
-            Console.WriteLine(exc.Message);
+            return View();
         }
-
-        if (result.Succeeded)
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            // sign-in
-            // isPersister: false - must be deleted automatically when the browser is closed
-            await signInManager.SignInAsync(user, isPersistent: false);
+            // Validation 
+            if (!ModelState.IsValid)
+            {
+                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessages);
+            }
 
-            var authenticationResponse = jwtService.CreateJwtToken(user);
-            user.RefreshToken = authenticationResponse.RefreshToken;
+            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: true, lockoutOnFailure: false);
 
-            user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
-            await userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                ApplicationUser? user = await userManager.FindByEmailAsync(loginDto.Email);
 
-            Response.Cookies.Append("AccessToken", authenticationResponse.Token);
+                if (user == null)
+                    return NoContent();
 
-            return RedirectToAction(nameof(Index), null, authenticationResponse?.Token);
+                await signInManager.SignInAsync(user, isPersistent: true);
+                await userManager.UpdateAsync(user);
+
+                var roles = await userManager.GetRolesAsync(user);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role,  roles.FirstOrDefault())
+                };
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
+                return RedirectToAction("Index", "Product");
+            }
+            return Problem("Invalid email or password");
+        }
+        public IActionResult Privacy()
+        {
+            return View();
         }
 
-        string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
-        return Problem(errorMessage);
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 using OnlineStore.DataAccess.Repository.Base;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 
 namespace OnlineStore
 {
@@ -22,7 +24,6 @@ namespace OnlineStore
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
-            builder.Services.AddTransient<IJwtService, JwtService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IStoreService, StoreService>();
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
@@ -41,23 +42,19 @@ namespace OnlineStore
             .AddRoleStore<RoleStore<ApplicationRole, OnlineStoreDbContext, Guid>>()
             .AddDefaultTokenProviders();
 
-            //JWT server-side authentication
-            builder.Services.AddAuthentication(options =>
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+                options.LoginPath = "/Home/Login";
+                options.AccessDeniedPath = "/Home/Login";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.ExpireTimeSpan = TimeSpan.FromHours(Convert.ToDouble(builder.Configuration["Expires"]));
+                options.SlidingExpiration = false;
+            });
+            
+            builder.Services.AddAuthorization(auth =>
             {
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                {
-                    ValidateAudience = true,
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
-                    ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-                };
+                auth.AddPolicy("CookieAuthorization", policy => policy.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme).RequireAuthenticatedUser());
+                auth.DefaultPolicy = auth.GetPolicy("CookieAuthorization");
             });
 
             var app = builder.Build();
@@ -69,12 +66,13 @@ namespace OnlineStore
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseCookiePolicy();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
