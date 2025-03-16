@@ -10,6 +10,9 @@ using OnlineStore.Models;
 using System.Web;
 using System.Net;
 using OnlineStore.BusinessLogic.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace OnlineStore.Controllers
 {
@@ -34,10 +37,6 @@ namespace OnlineStore.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var accessToken = Request.Cookies["AccessToken"];
-
-            if (accessToken == null)
-                return RedirectToAction(nameof(Register));
             return View();
         }
         [HttpGet]
@@ -55,6 +54,7 @@ namespace OnlineStore.Controllers
                 string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
                 return Problem(errorMessages);
             }
+            //return RedirectToAction(actionName: "Index", controllerName: "Product", null);
 
             // Create user
             ApplicationUser user = new ApplicationUser() { Id=Guid.NewGuid(), Name=registerDto.Name, Email=registerDto.Email, PhoneNumber=registerDto.PhoneNumber};
@@ -84,21 +84,25 @@ namespace OnlineStore.Controllers
                 Console.WriteLine(exc.Message);
             }
 
+            var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, registerDto.Email), new Claim(ClaimTypes.Name, registerDto.Email, ClaimTypes.Role, registerDto.IsAdmin ? "Admin" : "User") };
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties()
+            {
+                IsPersistent = true,
+
+            });
+
             if (result.Succeeded)
             {
                 // sign-in
                 // isPersister: false - must be deleted automatically when the browser is closed
                 await signInManager.SignInAsync(user, isPersistent: false);
 
-                var authenticationResponse = jwtService.CreateJwtToken(user);
-                user.RefreshToken = authenticationResponse.RefreshToken;
+                //var authenticationResponse = jwtService.CreateJwtToken(user);
+                //user.RefreshToken = authenticationResponse.RefreshToken;
 
-                user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
+                //user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
                 await userManager.UpdateAsync(user);
-
-                Response.Cookies.Append("AccessToken", authenticationResponse.Token);
-
-                return RedirectToAction(nameof(Index), null, authenticationResponse?.Token);
             }
 
             string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
