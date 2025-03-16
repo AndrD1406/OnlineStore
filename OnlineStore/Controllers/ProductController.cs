@@ -27,6 +27,7 @@ public class ProductController : Controller
     [Authorize]
     public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
     {
+        var user = User;
         var stores = await storeService.GetAll();
         ViewBag.Stores = stores;
         var products = await productService.Filter(x => product != null ? x.Name.ToLower().Contains(product.ToLower()) : true && storeId != null ? x.StoreId == storeId : true && price != null ? x.Price <= price : true);
