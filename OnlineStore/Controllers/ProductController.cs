@@ -8,14 +8,14 @@ using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
 using System.Runtime.CompilerServices;
 
-namespace OnlineStore.Controllers
+namespace OnlineStore.Controllers;
+
+[Route("[controller]/[action]")]
+public class ProductController : Controller
 {
-    [Route("[controller]/[action]")]
-    public class ProductController : Controller
-    {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IProductService productService;
-        private readonly IStoreService storeService;
+    private readonly ILogger<HomeController> _logger;
+    private readonly IProductService productService;
+    private readonly IStoreService storeService;
 
         public ProductController(ILogger<HomeController> logger, IProductService prdService, IStoreService strService)
         {

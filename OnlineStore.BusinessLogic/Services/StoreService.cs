@@ -7,19 +7,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineStore.BusinessLogic.Services
-{
-    public class StoreService: IStoreService
-    {
-        private readonly IEntityRepository<Guid, Store> repository;
+namespace OnlineStore.BusinessLogic.Services;
 
-        public StoreService(IEntityRepository<Guid, Store> repository)
-        {
-            this.repository = repository;
-        }
-        public async Task<IEnumerable<Store>> GetAll()
-        {
-            return await this.repository.GetAll();
-        }
+public class StoreService: IStoreService
+{
+    private readonly IEntityRepository<Guid, Store> repository;
+
+    public StoreService(IEntityRepository<Guid, Store> repository)
+    {
+        this.repository = repository;
+    }
+
+    public async Task<Store> Get(Guid id)
+    {
+        return await this.repository.GetById(id);
+    }
+
+    public async Task<IEnumerable<Store>> GetAll()
+    {
+        return await this.repository.GetAll();
+    }
+
+    public async Task Delete(Guid id)
+    {
+        var store = await this.repository.GetById(id);
+        await this.repository.Delete(store);
+    }
+
+    public async Task<Store> Update(Guid storeId, Store store)
+    {
+        var storeToUpdate = await this.repository.GetById(storeId);
+
+        var updatedStore = await this.repository.Update(storeToUpdate);
+
+        return updatedStore;
     }
 }

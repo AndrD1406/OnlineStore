@@ -43,15 +43,15 @@ namespace OnlineStore.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterDto registerDto)
+    {
+        // Validation 
+        if (!ModelState.IsValid)
         {
-            // Validation 
-            if (!ModelState.IsValid)
-            {
-                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
-                return Problem(errorMessages);
-            }
+            string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+            return Problem(errorMessages);
+        }
 
             ApplicationUser user = new ApplicationUser() { Id = Guid.NewGuid(), Name = registerDto.Name, Email = registerDto.Email, PhoneNumber = registerDto.PhoneNumber, UserName = registerDto.Email };
 
@@ -60,22 +60,22 @@ namespace OnlineStore.Controllers
             {
                 result = await userManager.CreateAsync(user, registerDto.Password);
 
-                if (result.Succeeded)
+            if (result.Succeeded)
+            {
+                if (registerDto.IsAdmin)
                 {
-                    if (registerDto.IsAdmin)
-                    {
-                        await userManager.AddToRoleAsync(user, "Admin");
-                    }
-                    else
-                    {
-                        await userManager.AddToRoleAsync(user, "User");
-                    }
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+                else
+                {
+                    await userManager.AddToRoleAsync(user, "User");
                 }
             }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
+        }
+        catch (Exception exc)
+        {
+            Console.WriteLine(exc.Message);
+        }
 
             if (result.Succeeded)
             {
@@ -140,10 +140,9 @@ namespace OnlineStore.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

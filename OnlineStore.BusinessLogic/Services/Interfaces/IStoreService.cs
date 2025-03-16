@@ -9,6 +9,12 @@ namespace OnlineStore.BusinessLogic.Services.Interfaces
 {
     public interface IStoreService
     {
+        Task<Store> Get(Guid id);
+
         Task<IEnumerable<Store>> GetAll();
+
+        Task Delete(Guid id);
+
+        Task<Store> Update(Guid storeId, Store store);
     }
 }
