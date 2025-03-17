@@ -1,1 +1,9 @@
-﻿
+﻿@model Product
+
+<div class="headerWithButton">
+<h2>@Model.Name</h2>
+<div>
+    <input min="0" max="@Model.Quantity" type="number"/>
+<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Add", "Cart", new { storeId = @Model.Id })'">Add Product</button>
+</div>
+</div>

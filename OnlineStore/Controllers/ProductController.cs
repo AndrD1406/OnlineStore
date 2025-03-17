@@ -43,10 +43,9 @@ public class ProductController : Controller
         return View(nameof(GetProductsByStore), products);
     }
     [HttpGet]
-    [Route("{id}")]
-    public async Task<IActionResult> Details(Guid id)
+    public async Task<IActionResult> Details([FromQuery] Guid id)
     {
         var product = await productService.Filter(x => x.Id == id);
-        return View(product);
+        return View(product.FirstOrDefault());
     }
 }

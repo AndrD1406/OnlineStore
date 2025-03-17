@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Products";
 }
-<form method="get">
     <h1>@ViewBag.Title</h1>
     <div>@{
             await Html.RenderPartialAsync("SearchComponent", new ViewDataDictionary(ViewData));
@@ -28,12 +27,11 @@
                     <td>@product.Quantity</td>
                     <td>@product.Price</td>
                     <td class="cellCenter">
-                        <button class="btn btn-primary" onclick="location.href=@Url.Action("Details", "Product", new { id = product.Id })'">
+                        <button class="btn btn-primary" onclick="location.href='@(Url.Action("Details", "Product", new { id = product.Id }))'">
                             Details
                         </button>
-                        </td>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
-</form>

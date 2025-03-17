@@ -36,6 +36,7 @@ public class StoreController : Controller
             return NotFound();
         }
 
+        ViewBag.storeId = storeId;
         var products = await productService.Filter(x =>
             x.StoreId == storeId &&
             (string.IsNullOrEmpty(product) || x.Name.ToLower().Contains(product.ToLower())) &&
