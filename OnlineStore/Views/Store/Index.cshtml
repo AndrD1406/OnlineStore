@@ -1,0 +1,27 @@
+﻿@model IEnumerable<OnlineStore.DataAccess.Models.Store>
+
+@{
+    ViewData["Title"] = "Stores";
+}
+
+<h2>Stores</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Stores</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var store in Model)
+        {
+                <tr>
+                    <td>@store.Name</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
