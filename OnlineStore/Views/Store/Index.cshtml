@@ -3,8 +3,11 @@
 @{
     ViewData["Title"] = "Stores";
 }
+<div class="headerWithButton">
+    <h2>Stores</h2>
+    <button type="button" class="button button-red-back searchButton buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
+</div>
 
-<h2>Stores</h2>
 
 <table class="table table-striped">
     <thead>
@@ -18,7 +21,7 @@
         {
                 <tr>
                     <td>@store.Name</td>
-                    <td>
+                <td class ="buttonsCell">
                         <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
                         <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Edit", "Store", new { id = store.Id })'">Edit</button>
                         <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete", "Store", new { id = store.Id })'">Delete</button>
@@ -27,5 +30,3 @@
         }
     </tbody>
 </table>
-
-<button type="button" class="btn btn-primary mb-3" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>

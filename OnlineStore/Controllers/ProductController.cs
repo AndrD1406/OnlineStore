@@ -24,7 +24,6 @@ public class ProductController : Controller
         storeService = strService;
     }
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
     {
         var user = User;
@@ -42,5 +41,11 @@ public class ProductController : Controller
     {
         var products = await productService.GetByStore(storeId);
         return View(nameof(GetProductsByStore), products);
+    }
+    [HttpGet]
+    public async Task<IActionResult> Details([FromQuery] Guid id)
+    {
+        var product = await productService.Filter(x => x.Id == id);
+        return View(product.FirstOrDefault());
     }
 }
