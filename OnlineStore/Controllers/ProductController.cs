@@ -24,7 +24,6 @@ public class ProductController : Controller
         storeService = strService;
     }
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
     {
         var user = User;

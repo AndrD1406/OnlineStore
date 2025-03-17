@@ -15,6 +15,7 @@
                 <td>Store</td>
                 <td>Quantity</td>
                 <td>Price</td>
+                <td></td>
             </tr>
         </thead>
         <tbody>
@@ -26,8 +27,10 @@
                     <td>@product.Store.Name</td>
                     <td>@product.Quantity</td>
                     <td>@product.Price</td>
-                    <td>
-                        <button class="button button-blue-back searchButton"><a href="~/product/details">Details</a></button>
+                    <td class="cellCenter">
+                        <button class="btn btn-primary" onclick="location.href=@Url.Action("Details", "Product", new { id = product.Id })'">
+                            Details
+                        </button>
                         </td>
                 </tr>
             }

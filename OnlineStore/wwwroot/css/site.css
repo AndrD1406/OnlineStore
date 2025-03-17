@@ -424,6 +424,7 @@ a.link-hover:hover {
     display:flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 16px;
 }
 
 .searchInput {
@@ -432,6 +433,26 @@ a.link-hover:hover {
 
 .searchSelector {
     width: 25%;
+}
+
+.bigSearchInput {
+    width: 40%;
+    height: 40px;
+}
+
+.bigPriceInput {
+    width: 200px;
+    height: 40px;
+}
+
+.headerWithButton {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.buttonRight {
+    margin-right: 50px;
 }
 
 .searchButtons {
@@ -454,3 +475,9 @@ a.link-hover:hover {
     height: 40px;
     width: 120px;
 }
+
+.cellCenter {
+    display: flex;
+    justify-content: space-around;
+}
+
