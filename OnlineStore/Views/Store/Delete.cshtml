@@ -1,0 +1,15 @@
+﻿@model OnlineStore.DataAccess.Models.Store
+
+@{
+    ViewData["Title"] = "Delete Store";
+}
+
+<h2>Delete Store</h2>
+
+<p>Are you sure you want to delete the store <strong>@Model.Name</strong>?</p>
+
+<form method="post" asp-action="Delete">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Store")'">Cancel</button>
+</form>

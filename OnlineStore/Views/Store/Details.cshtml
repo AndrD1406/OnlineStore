@@ -1,0 +1,46 @@
+﻿@model StoreDetailsViewModel
+
+@{
+    ViewData["Title"] = "Store Inventory - " + Model.Store.Name;
+}
+
+<h2>Store Inventory: @Model.Store.Name</h2>
+
+@* <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Product", new { storeId = Model.Store.Id })'">Add Product</button> *@
+
+<form method="get" class="mt-3">
+    <input type="hidden" name="storeId" value="@Model.Store.Id" />
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" name="product" value="@Model.ProductFilter" placeholder="Product name" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <input type="number" step="0.01" name="price" value="@(Model.PriceFilter.HasValue ? Model.PriceFilter.ToString() : "")" placeholder="Price" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-secondary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price</td>
+                    <td>@product.Quantity</td>
+                </tr>
+        }
+    </tbody>
+</table>
