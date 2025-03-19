@@ -28,6 +28,12 @@ public class StoreService: IStoreService
         return await this.repository.GetAll();
     }
 
+    public async Task<Store> Create(Store store)
+    {
+        store.Id = Guid.NewGuid(); 
+        return await this.repository.Create(store);
+    }
+
     public async Task Delete(Guid id)
     {
         var store = await this.repository.GetById(id);
@@ -37,6 +43,8 @@ public class StoreService: IStoreService
     public async Task<Store> Update(Guid storeId, Store store)
     {
         var storeToUpdate = await this.repository.GetById(storeId);
+
+        storeToUpdate.Name = store.Name;
 
         var updatedStore = await this.repository.Update(storeToUpdate);
 

@@ -13,6 +13,8 @@ namespace OnlineStore.BusinessLogic.Services.Interfaces
 
         Task<IEnumerable<Store>> GetAll();
 
+        Task<Store> Create(Store store);
+
         Task Delete(Guid id);
 
         Task<Store> Update(Guid storeId, Store store);
