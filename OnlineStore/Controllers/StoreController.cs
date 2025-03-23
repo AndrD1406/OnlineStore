@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
@@ -72,6 +74,7 @@ public class StoreController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles ="User", AuthenticationSchemes =CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Edit(Guid id)
     {
         var store = await storeService.Get(id);
