@@ -1,7 +1,9 @@
 ﻿<form>
-<div class="searchRow">
-    <input name="product" class="form-input searchInput h-50" value="@ViewBag.product" placeholder="enter name of product"/>
-    <select name="storeId" class="form-input searchSelector h-50">
+<div class="alignElements">
+    <label class="searchComponentLabel">Product: </label>
+    <input name="product" class="form-input searchInput" value="@ViewBag.product"/>
+    <label class="searchComponentLabel">Store: </label>
+    <select name="storeId" class="form-input searchSelector">
         <option value="@null">Select store</option>
         @foreach (Store store in ViewBag?.Stores)
         { 
@@ -15,7 +17,8 @@
             }
         }
     </select>
-    <input name="price" class="form-input priceInput h-50" value="@ViewBag.price" type="number" />
+    <label class="searchComponentLabel">Price: </label>
+    <input name="price" class="form-input priceInput" value="@ViewBag.price" type="number" />
     <div class="searchButtons">
         <button class="button button-blue-back searchButton">Search</button>
         <a href="~/product/index" class="link-hover clearFiltersLabel">Clear all</a>

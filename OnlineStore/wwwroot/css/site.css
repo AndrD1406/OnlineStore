@@ -429,10 +429,16 @@ a.link-hover:hover {
 
 .searchInput {
     width: 25%;
+    height: 40px;
 }
 
 .searchSelector {
     width: 25%;
+    height: 40px;
+}
+
+.searchComponentLabel {
+    font-size: 20px;
 }
 
 .bigSearchInput {
