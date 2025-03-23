@@ -488,3 +488,26 @@ a.link-hover:hover {
     margin-right: 50px;
 }
 
+.alignElements {
+    display: flex;
+    align-items: end;
+    gap: 30px;
+}
+
+.alignLabel {
+    display: flex;
+    align-self: end;
+}
+
+.description {
+   white-space: normal;
+}
+
+.tableDescription {
+    max-width: 900px;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
