@@ -1,20 +1,19 @@
 ﻿@model RegisterDto
-
-@{ 
-    ViewBag.Title = "Register"; 
+@{
+    ViewBag.Title = "Your account";
 }
 
-<a asp-controller="Home" asp-action="Login" class="link-hover">Login</a>
+<a asp-controller="Product" asp-action="Index" class="link-hover">Products</a>
 <h2>@ViewBag.Title</h2>
 <div class="w-50">
-    <form asp-controller="Home" asp-action="Register" method="post">
+    <form asp-controller="Home" asp-action="ModifyPersonalAccount" method="post">
         @*Name*@
         <div class="form-field flex">
             <div class="w-25">
                 <label for="Name" class="form-label pt">Name</label>
             </div>
             <div class="flex-1">
-                <input asp-for="Name" class="form-input" />
+                <input asp-for="Name" class="form-input" value="@Model.Name" />
                 <span asp-validation-for="Name" class="text-red"></span>
             </div>
         </div>
@@ -24,7 +23,7 @@
                 <label for="Email" class="form-label pt">Email</label>
             </div>
             <div class="flex-1">
-                <input type="text" asp-for="Email" class="form-input" />
+                <input type="text" asp-for="Email" class="form-input" value="@Model.Email" />
                 <span asp-validation-for="Email" class="text-red"></span>
             </div>
         </div>
@@ -34,7 +33,7 @@
                 <label for="PhoneNumber" class="form-label pt">Phone Number</label>
             </div>
             <div class="flex-1">
-                <input type="text" asp-for="PhoneNumber" class="form-input" />
+                <input type="text" asp-for="PhoneNumber" class="form-input" value="@Model.PhoneNumber" />
                 <span asp-validation-for="PhoneNumber" class="text-red"></span>
             </div>
         </div>
@@ -61,7 +60,7 @@
         @*Submit*@
         <div class="form-field flex">
             <div class="flex-1">
-                <button class="button button-green-back">Register</button>
+                <button class="button button-green-back">Update</button>
             </div>
         </div>
         @*@if(ViewBag.Errors != null)

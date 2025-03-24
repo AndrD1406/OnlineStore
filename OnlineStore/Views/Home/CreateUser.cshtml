@@ -1,13 +1,13 @@
 ﻿@model RegisterDto
 
-@{ 
-    ViewBag.Title = "Register"; 
+@{
+    ViewBag.Title = "Register";
 }
 
-<a asp-controller="Home" asp-action="Login" class="link-hover">Login</a>
+<a asp-controller="Home" asp-action="CreateUser" class="link-hover">Create User</a>
 <h2>@ViewBag.Title</h2>
 <div class="w-50">
-    <form asp-controller="Home" asp-action="Register" method="post">
+    <form asp-controller="Home" asp-action="CreateUser" method="post">
         @*Name*@
         <div class="form-field flex">
             <div class="w-25">
@@ -58,10 +58,20 @@
                 <span asp-validation-for="ConfirmPassword" class="text-red"></span>
             </div>
         </div>
+        @*Role*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="Role" class="form-label pt">Is Admin</label>
+            </div>
+            <div class="flex-1 formCheckboxCenter">
+                <input type="checkbox" asp-for="IsAdmin" class="formCheckbox" />
+                <span asp-validation-for="IsAdmin" class="text-red"></span>
+            </div>
+        </div>
         @*Submit*@
         <div class="form-field flex">
             <div class="flex-1">
-                <button class="button button-green-back">Register</button>
+                <button class="button button-green-back">Create User</button>
             </div>
         </div>
         @*@if(ViewBag.Errors != null)
@@ -78,3 +88,4 @@
         @* <div asp-validation-summary="All"></div> *@
     </form>
 </div>
+
