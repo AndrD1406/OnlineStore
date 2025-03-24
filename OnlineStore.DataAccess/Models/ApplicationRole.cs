@@ -6,9 +6,8 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineStore.DataAccess.Models
+namespace OnlineStore.DataAccess.Models;
+
+public class ApplicationRole : IdentityRole<Guid>
 {
-	public class ApplicationRole : IdentityRole<Guid>
-	{
-	}
 }

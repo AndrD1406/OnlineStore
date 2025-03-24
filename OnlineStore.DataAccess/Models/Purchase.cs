@@ -6,18 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineStore.DataAccess.Models
+namespace OnlineStore.DataAccess.Models;
+
+public class Purchase
 {
-    public class Purchase
-    {
-        [Key]
-        public Guid Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-        public IEnumerable<Product>? Products { get; set; }
+    public IEnumerable<Product>? Products { get; set; }
 
-        [ForeignKey(nameof(ApplicationUser))]
-        public Guid UserId { get; set; }
+    [ForeignKey(nameof(ApplicationUser))]
+    public Guid UserId { get; set; }
 
-        public ApplicationUser? User { get; set; }
-    }
+    public ApplicationUser? User { get; set; }
 }

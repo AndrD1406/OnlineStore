@@ -1,16 +1,12 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using OnlineStore.BusinessLogic.Services;
-using OnlineStore.DataAccess.Models;
-using OnlineStore.DataAccess;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using OnlineStore.BusinessLogic.Services.Interfaces;
-using Org.BouncyCastle.Asn1.X509.Qualified;
-using OnlineStore.DataAccess.Repository.Base;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using OnlineStore.BusinessLogic.Services;
+using OnlineStore.BusinessLogic.Services.Interfaces;
+using OnlineStore.DataAccess;
+using OnlineStore.DataAccess.Models;
+using OnlineStore.DataAccess.Repository.Base;
 
 namespace OnlineStore
 {
@@ -24,6 +20,7 @@ namespace OnlineStore
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
+            builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IStoreService, StoreService>();
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
