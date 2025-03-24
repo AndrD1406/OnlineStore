@@ -12,6 +12,6 @@ public class CartController : Controller
 
     public IActionResult Add()
     {
-        return View();
+        return RedirectToAction(nameof(Index));
     }
 }
