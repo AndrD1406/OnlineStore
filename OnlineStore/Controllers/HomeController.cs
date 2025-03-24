@@ -278,5 +278,54 @@ namespace OnlineStore.Controllers
             string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
             return Problem(errorMessage);
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult CreateUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateUser(RegisterDto registerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessages);
+            }
+
+            ApplicationUser user = new ApplicationUser() { Id = Guid.NewGuid(), Name = registerDto.Name, Email = registerDto.Email, PhoneNumber = registerDto.PhoneNumber, UserName = registerDto.Email };
+
+            IdentityResult result = null;
+            try
+            {
+                result = await userManager.CreateAsync(user, registerDto.Password);
+
+                if (result.Succeeded)
+                {
+                    if (registerDto.IsAdmin)
+                    {
+                        await userManager.AddToRoleAsync(user, "Admin");
+                    }
+                    else
+                    {
+                        await userManager.AddToRoleAsync(user, "User");
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Users");
+            }
+
+            string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
+            return Problem(errorMessage);
+        }
     }
 }
