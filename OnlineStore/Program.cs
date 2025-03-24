@@ -23,6 +23,7 @@ namespace OnlineStore
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IStoreService, StoreService>();
+            builder.Services.AddTransient<IPurchaseService, PurchaseService>();
             builder.Services.AddDbContext<OnlineStoreDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));

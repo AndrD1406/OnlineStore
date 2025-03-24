@@ -7,6 +7,7 @@ using OnlineStore.DataAccess.Models;
 using OnlineStore.Models;
 
 namespace OnlineStore.Controllers;
+
 [Route("[controller]/[action]")]
 public class StoreController : Controller
 {

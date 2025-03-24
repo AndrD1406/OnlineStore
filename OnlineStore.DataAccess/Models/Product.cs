@@ -22,7 +22,6 @@ public class Product: IKeyedEntity<Guid>
     public double Price { get; set; }
 
     [ForeignKey(nameof(Store))]
-
     public Guid StoreId { get; set; }
 
     public Store? Store { get; set; }

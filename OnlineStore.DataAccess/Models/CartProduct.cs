@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Models;
 
-public class Cart : IKeyedEntity<Guid>
+public class CartProduct : IKeyedEntity<Guid>
 {
     [Key]
     public Guid Id { get; set; }
 
-    [ForeignKey(nameof(ApplicationUser))]
-    public Guid UserId { get; set; }
+    [ForeignKey(nameof(Product))]
+    public Guid ProductId { get; set; }
 
-    public ApplicationUser? User { get; set; }
+    public Product? Product { get; set; }
+    
+    public int Quantity { get; set; }
 
-    public List<CartProduct>? CartProducts { get; set; } = new List<CartProduct>();
-
-    public Cart() { }
+    public CartProduct() { }
 }

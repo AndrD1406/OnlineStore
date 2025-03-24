@@ -7,8 +7,8 @@
             <label>Products available: </label>
             <input class="form-input priceInput" min="0" max="@Model.Quantity" disabled value="@Model.Quantity" type="number" />
             <label>Amount of products: </label>
-            <input class="form-input priceInput" min="0" max="@Model.Quantity" value="0" type="number"/>
-            <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Add", "Cart", new { storeId = @Model.Id })'">Add To Cart</button>
+            <input class="form-input priceInput" name=quantity min="0" max="@Model.Quantity" value="0" type="number"/>
+            <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Add", "Cart", new { productId = @Model.Id })'">Add To Cart</button>
         </div>
     </div>
     <div class="description">
