@@ -26,14 +26,22 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Index">Stores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Users</a>
                         </li>
+                        <div class="layoutRightContainer">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                                @if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value == null) {
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                                }
+                                else {
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ModifyPersonalAccount">Personal Account</a>
+                                }
+                            
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="LogOut">Log Out</a>
                         </li>
+                </div>
                     </ul>
                 </div>
             </div>

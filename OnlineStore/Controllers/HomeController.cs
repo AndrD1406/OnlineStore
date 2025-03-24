@@ -13,6 +13,7 @@ using OnlineStore.BusinessLogic.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using MySqlX.XDevAPI.Common;
 
 namespace OnlineStore.Controllers
 {
@@ -138,7 +139,7 @@ namespace OnlineStore.Controllers
         [Authorize]
         public async Task<IActionResult> LogOut()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             return RedirectToAction("Index", "Product");
         }
         public IActionResult Privacy()
@@ -150,6 +151,81 @@ namespace OnlineStore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ModifyPersonalAccount()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await userManager.FindByIdAsync(userId);
+            var registerDto = new RegisterDto() { Name=user.Name, Email=user.Email, PhoneNumber=user.PhoneNumber };
+
+            return View(registerDto);
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ModifyPersonalAccount(RegisterDto updatedUser)
+        {
+            // Validation 
+            if (!ModelState.IsValid)
+            {
+                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessages);
+            }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ApplicationUser user = new ApplicationUser();
+
+            user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            try
+            {
+                user.Name = updatedUser.Name;
+                user.Email = updatedUser.Email;
+                user.PhoneNumber = updatedUser.PhoneNumber;
+                user.UserName = updatedUser.Email;
+
+                var resultUpdateUser  = await userManager.UpdateAsync(user);
+                if(!resultUpdateUser.Succeeded)
+                {
+                    string errorMessage = string.Join(" | ", resultUpdateUser.Errors.Select(e => e.Description));
+                    return Problem(errorMessage);
+                }
+
+                var resultRemovePasword = await userManager.RemovePasswordAsync(user);
+                if (!resultRemovePasword.Succeeded)
+                {
+                    string errorMessage = string.Join(" | ", resultRemovePasword.Errors.Select(e => e.Description));
+                    return Problem(errorMessage);
+                }
+
+                var resultAddPassword = await userManager.AddPasswordAsync(user, updatedUser.Password);
+                if (!resultAddPassword.Succeeded)
+                {
+                    string errorMessage = string.Join(" | ", resultAddPassword.Errors.Select(e => e.Description));
+                    return Problem(errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+
+            await signInManager.RefreshSignInAsync(user);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, updatedUser.IsAdmin ? "Admin" : "User")
+                };
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = false });
+
+            return RedirectToAction("Index", "Product");
         }
     }
 }

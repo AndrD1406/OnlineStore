@@ -494,6 +494,14 @@ a.link-hover:hover {
     margin-right: 50px;
 }
 
+.layoutRightContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-right: 50px;
+    flex-grow: 1;
+}
+
 .alignElements {
     display: flex;
     align-items: end;
