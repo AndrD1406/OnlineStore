@@ -26,7 +26,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Index">Stores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Users</a>
+                            @if (User.FindFirst(ClaimTypes.Role)?.Value == "Admin") {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Users</a>
+                            }
                         </li>
                         <div class="layoutRightContainer">
                         <li class="nav-item">

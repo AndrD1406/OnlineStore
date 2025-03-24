@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MySqlX.XDevAPI.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace OnlineStore.Controllers
 {
@@ -226,6 +227,56 @@ namespace OnlineStore.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = false });
 
             return RedirectToAction("Index", "Product");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Users([FromQuery] string? name, [FromQuery] string? email)
+        {
+            ViewBag.name = name;
+            ViewBag.email = email;
+            var users = await userManager.Users.Where(x => (name != null ? x.Name.ToLower().Contains(name.ToLower()) : true) && (email != null ? x.Email.ToLower().Contains(email.ToLower()) : true)).ToListAsync();
+
+
+            List<object> userList = new List<object>();
+            foreach (var user in users)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                userList.Add(new
+                {
+                    user.Id,
+                    Name = user.Name,
+                    user.Email,
+                    user.PhoneNumber,
+                    Role = roles.FirstOrDefault() 
+                });
+            }
+            return View(userList);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Users"); 
+            }
+
+            string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
+            return Problem(errorMessage);
         }
     }
 }

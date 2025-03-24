@@ -1,0 +1,40 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewBag.Title = "Users";
+}
+<h1>@ViewBag.Title</h1>
+<div>
+    @{
+        await Html.RenderPartialAsync("UserSearchComponent", new ViewDataDictionary(ViewData));
+    }
+</div>
+<table class="table w-100 mt products">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Email</td>
+            <td>Phone Number</td>
+            <td>Role</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in @Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td class="tableDescription">@user.Email</td>
+                <td>@user.PhoneNumber</td>
+                <td>@user.Role</td>
+                <td class="cellCenter">
+                    @if (user.Role != "Admin")
+                    {
+                        <button class="btn btn-primary" onclick="location.href='@(Url.Action("DeleteUser", "Home", new { id = user.Id }))'">
+                            Delete
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
