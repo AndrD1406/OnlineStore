@@ -14,8 +14,8 @@
         <input type="text" class="bigSearchInput form-input" name="product" value="@Model.ProductFilter" placeholder="Product name" />
         <input type="number" class="bigPriceInput form-input" name="price" value="@(Model.PriceFilter.HasValue ? Model.PriceFilter.ToString() : "")" placeholder="Price" />
         <div class="searchButtons">
-            <button class="button button-blue-back searchButton">Search</button>
-            <a onclick="location.href='@Url.Action("Details", "Store", new { storeId = @ViewBag.storeId })'" class="link-hover clearFiltersLabel">Clear all</a>
+            <button class="btn btn-success searchButton">Search</button>
+            <a onclick="location.href='@Url.Action("Details", "Store", new { storeId = @ViewBag.storeId })'" class="btn btn-secondary text-white text-decoration-none clearFiltersLabel">Clear all</a>
         </div>
     </div>
 </form>

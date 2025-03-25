@@ -5,7 +5,7 @@
 }
 <div class="headerWithButton">
     <h2>Stores</h2>
-    <button type="button" class="button button-red-back searchButton buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
+    <button type="button" class="btn btn-success buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
 </div>
 
 
@@ -23,7 +23,7 @@
                     <td>@store.Name</td>
                 <td class ="buttonsCell">
                         <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
-                        <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("Edit", "Store", new { id = store.Id })'">Edit</button>
+                        <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action("Edit", "Store", new { id = store.Id })'">Edit</button>
                         <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete", "Store", new { id = store.Id })'">Delete</button>
                     </td>
                 </tr>
