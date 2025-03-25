@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Models;
 
-public class Purchase
+public class Purchase : IKeyedEntity<Guid>
 {
     [Key]
     public Guid Id { get; set; }
@@ -19,6 +19,10 @@ public class Purchase
     public Guid UserId { get; set; }
 
     public ApplicationUser? User { get; set; }
+
+    public DateTime CreatedDate { get; set; }
+
+    public double TotalAmount { get; set; }
 
     public Purchase() { }
 }

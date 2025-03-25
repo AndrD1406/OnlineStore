@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.DataAccess.Models.Configurations;
 
-public class CartProductConfiguration : IEntityTypeConfiguration<CartProduct>
+public class ProductToCartConfiguration : IEntityTypeConfiguration<ProductToCart>
 {
-    public void Configure(EntityTypeBuilder<CartProduct> builder)
+    public void Configure(EntityTypeBuilder<ProductToCart> builder)
     {
         
     }

@@ -1,5 +1,64 @@
-﻿@*
-    
-*@
+﻿@model OnlineStore.DataAccess.Models.Cart
+
 @{
+    var productToCarts = Model.ProductToCarts ?? new List<ProductToCart>();
+
+    var groupedItems = productToCarts
+        .GroupBy(x => x.ProductId)
+        .Select(g => new
+        {
+            Product = g.First().Product,
+            Quantity = g.Sum(x => x.Quantity)
+        })
+        .ToList();
+
+    var total = groupedItems.Sum(x => (x.Product?.Price ?? 0) * x.Quantity);
+}
+
+<h2>Your Cart</h2>
+
+@if (!groupedItems.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in groupedItems)
+            {
+                <tr>
+                    <td>@item.Product?.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product?.Price</td>
+                    <td>@((item.Product?.Price ?? 0) * item.Quantity)</td>
+                    <td>
+                        @using (Html.BeginForm("Remove", "Cart", FormMethod.Post))
+                        {
+                            @Html.Hidden("productId", item.Product?.Id)
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        }
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="4"><strong>Total:</strong></td>
+                <td><strong>@total</strong></td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@using (Html.BeginForm("Create", "Purchase", FormMethod.Post))
+{
+    <button type="submit" class="btn btn-primary">Buy</button>
 }

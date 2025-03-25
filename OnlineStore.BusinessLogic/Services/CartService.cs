@@ -12,9 +12,9 @@ namespace OnlineStore.BusinessLogic.Services;
 public class CartService : ICartService
 {
     private readonly IEntityRepository<Guid, Cart> repository;
-    private readonly IEntityRepository<Guid, CartProduct> cartProductRepository;
+    private readonly IEntityRepository<Guid, ProductToCart> cartProductRepository;
 
-    public CartService(IEntityRepository<Guid, Cart> repository, IEntityRepository<Guid, CartProduct> cartProductRepository)
+    public CartService(IEntityRepository<Guid, Cart> repository, IEntityRepository<Guid, ProductToCart> cartProductRepository)
     {
         this.repository = repository;
         this.cartProductRepository = cartProductRepository;
@@ -22,10 +22,13 @@ public class CartService : ICartService
 
     public async Task<IEnumerable<Cart>> GetByUserId(Guid userId)
     {
-        return await this.repository.GetByFilter(c => c.UserId == userId);
+        return await repository.GetByFilter(
+            c => c.UserId == userId,
+            includeProperties: "ProductToCarts.Product"
+        );
     }
 
-    public async Task<CartProduct> CreateCartProduct(CartProduct cartProduct)
+    public async Task<ProductToCart> CreateCartProduct(ProductToCart cartProduct)
     {
         return await this.cartProductRepository.Create(cartProduct);
     }
@@ -41,17 +44,33 @@ public class CartService : ICartService
         await this.repository.Delete(cart);
     }
 
-    public async Task<Cart> AddProductToCart(Guid id, CartProduct cartProduct)
+    public async Task<Cart> AddProductToCart(Guid id, ProductToCart cartProduct)
     {
         var cart = await this.repository.GetById(id);
+        if (cart.ProductToCarts == null)
+            cart.ProductToCarts = new List<ProductToCart>();
 
-        if (cart.CartProducts != null)
-        {
-            cart.CartProducts.Add(cartProduct); 
-        }
-        
-        return await this.repository.Update(cart);
+        await this.cartProductRepository.Create(cartProduct);
+        return cart;
     }
 
+    public async Task RemoveProductFromCart(Guid cartId, Guid productId)
+    {
+        var associations = await this.cartProductRepository.GetByFilter(
+            ptc => ptc.CartId == cartId && ptc.ProductId == productId
+        );
+        foreach (var association in associations)
+        {
+            await this.cartProductRepository.Delete(association);
+        }
+    }
 
+    public async Task ClearCart(Guid cartId)
+    {
+        var items = await this.cartProductRepository.GetByFilter(ptc => ptc.CartId == cartId);
+        foreach (var item in items)
+        {
+            await this.cartProductRepository.Delete(item);
+        }
+    }
 }

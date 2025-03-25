@@ -14,7 +14,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OnlineStore</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -26,13 +26,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Index">Stores</a>
                         </li>
                         <li class="nav-item">
-                            @if (User.FindFirst(ClaimTypes.Role)?.Value == "Admin") {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Purchase" asp-action="Index">Purchases</a>
+                        </li>
+                        <li class="nav-item">
+                            @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin") {
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Users</a>
                             }
                         </li>
                         <div class="layoutRightContainer">
-                        <li class="nav-item">
-                                @if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value == null) {
+                            <li class="nav-item">
+                                @if (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == null) {
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                                 }
                                 else {

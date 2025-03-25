@@ -18,7 +18,7 @@ public class Cart : IKeyedEntity<Guid>
 
     public ApplicationUser? User { get; set; }
 
-    public List<CartProduct>? CartProducts { get; set; } = new List<CartProduct>();
+    public List<ProductToCart>? ProductToCarts { get; set; } = new List<ProductToCart>();
 
     public Cart() { }
 }

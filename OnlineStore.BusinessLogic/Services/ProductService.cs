@@ -44,9 +44,17 @@ public class ProductService : IProductService
     public async Task<Product> UpdateProduct(Guid productId, Product product)
     {
         var productToUpdate = await this.repository.GetById(productId);
+        if (productToUpdate == null)
+        {
+            throw new Exception("Product not found.");
+        }
+
+        productToUpdate.Name = product.Name;
+        productToUpdate.Description = product.Description;
+        productToUpdate.Price = product.Price;
+        productToUpdate.Quantity = product.Quantity;
 
         var updatedProduct = await this.repository.Update(productToUpdate);
-
         return updatedProduct;
     }
 }
