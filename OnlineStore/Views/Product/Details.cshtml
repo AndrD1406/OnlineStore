@@ -1,17 +1,22 @@
 ﻿@model Product
 
-<div>
-    <div class="headerWithButton">
-        <h2>@Model.Name</h2>
-        <div class="alignElements">
-            <label>Products available: </label>
-            <input class="form-input priceInput" min="0" max="@Model.Quantity" disabled value="@Model.Quantity" type="number" />
-            <label>Amount of products: </label>
-            <input class="form-input priceInput" min="0" max="@Model.Quantity" value="0" type="number"/>
-            <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Add", "Cart", new { storeId = @Model.Id })'">Add To Cart</button>
+
+@using (Html.BeginForm("Add", "Cart", FormMethod.Post))
+{
+    <div>
+        <div class="headerWithButton">
+            <h2>@Model.Name</h2>
+            <div class="alignElements">
+                <label>Products available: </label>
+                <input class="form-input priceInput" min="0" max="@Model.Quantity" disabled value="@Model.Quantity" type="number" />
+                <label>Amount of products: </label>
+                <input class="form-input priceInput" name="quantity" min="0" max="@Model.Quantity" value="0" type="number" />
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <button type="submit" class="btn btn-primary">Add To Cart</button>
+            </div>
+        </div>
+        <div class="description">
+            @Model.Description
         </div>
     </div>
-    <div class="description">
-        @Model.Description
-    </div>
-</div>
+}

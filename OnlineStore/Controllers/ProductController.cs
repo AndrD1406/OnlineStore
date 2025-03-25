@@ -47,4 +47,6 @@ public class ProductController : Controller
         var product = await productService.Filter(x => x.Id == id);
         return View(product.FirstOrDefault());
     }
+
+
 }

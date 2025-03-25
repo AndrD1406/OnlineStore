@@ -1,0 +1,28 @@
+﻿@model IEnumerable<OnlineStore.DataAccess.Models.Purchase>
+
+<h2>Your Purchases</h2>
+
+@if (!Model.Any())
+{
+    <p>You haven't made any purchases yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Purchase ID</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var purchase in Model)
+            {
+                <tr>
+                    <td>@purchase.Id</td>
+                    <td>@purchase.CreatedDate.ToString("g")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

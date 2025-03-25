@@ -16,113 +16,113 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using MySqlX.XDevAPI.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace OnlineStore.Controllers
+namespace OnlineStore.Controllers;
+
+[Route("[controller]/[action]")]
+public class HomeController : Controller
 {
-    [Route("[controller]/[action]")]
-    public class HomeController : Controller
+    private readonly ILogger<HomeController> _logger;
+    private readonly UserManager<ApplicationUser> userManager;
+    private readonly SignInManager<ApplicationUser> signInManager;
+    private readonly RoleManager<ApplicationRole> roleManager;
+
+    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userMng,
+        SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng)
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly RoleManager<ApplicationRole> roleManager;
+        _logger = logger;
+        userManager = userMng;
+        signInManager = signInMng;
+        roleManager = roleMng;
+    }
+    [HttpGet]
+    public IActionResult Index()
+    {
+        return View();
+    }
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View();
+    }
 
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userMng,
-            SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng)
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterDto registerDto)
+    {
+        // Validation 
+        if (!ModelState.IsValid)
         {
-            _logger = logger;
-            userManager = userMng;
-            signInManager = signInMng;
-            roleManager = roleMng;
-        }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
+            string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+            return Problem(errorMessages);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        ApplicationUser user = new ApplicationUser() { Id = Guid.NewGuid(), Name = registerDto.Name, Email = registerDto.Email, PhoneNumber = registerDto.PhoneNumber, UserName = registerDto.Email };
+
+        IdentityResult result = null;
+        try
         {
-            // Validation 
-            if (!ModelState.IsValid)
+            result = await userManager.CreateAsync(user, registerDto.Password);
+
+            if (result.Succeeded)
             {
-                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
-                return Problem(errorMessages);
-            }
-
-            ApplicationUser user = new ApplicationUser() { Id = Guid.NewGuid(), Name = registerDto.Name, Email = registerDto.Email, PhoneNumber = registerDto.PhoneNumber, UserName = registerDto.Email };
-
-            IdentityResult result = null;
-            try
-            {
-                result = await userManager.CreateAsync(user, registerDto.Password);
-
-                if (result.Succeeded)
+                if (!registerDto.IsAdmin)
                 {
-                    if (registerDto.IsAdmin)
-                    {
-                        await userManager.AddToRoleAsync(user, "Admin");
-                    }
-                    else
-                    {
-                        await userManager.AddToRoleAsync(user, "User");
-                    }
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+                else
+                {
+                    await userManager.AddToRoleAsync(user, "User");
                 }
             }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
-
-            if (result.Succeeded)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(ClaimTypes.Role, registerDto.IsAdmin ? "Admin" : "User")
-                };
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = false });
-                await signInManager.SignInAsync(user, isPersistent: false);
-                await userManager.UpdateAsync(user);
-                return RedirectToAction("Index", "Product");
-            }
-
-            string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
-            return Problem(errorMessage);
         }
-        [HttpGet]
-        public IActionResult Login()
+        catch (Exception exc)
         {
-            return View();
+            Console.WriteLine(exc.Message);
         }
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+
+        if (result.Succeeded)
         {
-            // Validation 
-            if (!ModelState.IsValid)
+            var claims = new List<Claim>
             {
-                string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
-                return Problem(errorMessages);
-            }
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Role, registerDto.IsAdmin ? "Admin" : "User")
+            };
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = false });
+            await signInManager.SignInAsync(user, isPersistent: false);
+            await userManager.UpdateAsync(user);
+            return RedirectToAction("Index", "Product");
+        }
 
-            var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+        string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
+        return Problem(errorMessage);
+    }
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginDto loginDto)
+    {
+        // Validation 
+        if (!ModelState.IsValid)
+        {
+            string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
+            return Problem(errorMessages);
+        }
 
-            if (result.Succeeded)
-            {
-                ApplicationUser? user = await userManager.FindByEmailAsync(loginDto.Email);
+        var result = await signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
 
-                if (user == null)
-                    return NoContent();
+        if (result.Succeeded)
+        {
+            ApplicationUser? user = await userManager.FindByEmailAsync(loginDto.Email);
 
-                await signInManager.SignInAsync(user, isPersistent: false);
-                await userManager.UpdateAsync(user);
+            if (user == null)
+                return NoContent();
+
+            await signInManager.SignInAsync(user, isPersistent: false);
+            await userManager.UpdateAsync(user);
 
                 var roles = await userManager.GetRolesAsync(user);
                 var claims = new List<Claim>
@@ -327,5 +327,5 @@ namespace OnlineStore.Controllers
             string errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
             return Problem(errorMessage);
         }
-    }
+    
 }
