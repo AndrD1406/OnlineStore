@@ -45,11 +45,13 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ModifyPersonalAccount">Personal Account</a>
                                 }
                             
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="LogOut">Log Out</a>
-                        </li>
-                </div>
+                            </li>
+                            <li class="nav-item">
+                                    @if (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value != null){
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="LogOut">Log Out</a>
+                                    }
+                            </li>
+                        </div>
                     </ul>
                 </div>
             </div>
