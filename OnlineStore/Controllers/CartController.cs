@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
@@ -37,6 +38,7 @@ public class CartController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Add(Guid productId, int quantity)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -67,6 +69,7 @@ public class CartController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Remove(Guid productId)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);

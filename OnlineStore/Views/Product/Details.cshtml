@@ -10,9 +10,12 @@
                 <label>Products available: </label>
                 <input class="form-input priceInput" min="0" max="@Model.Quantity" disabled value="@Model.Quantity" type="number" />
                 <label>Amount of products: </label>
-                <input class="form-input priceInput" name="quantity" min="0" max="@Model.Quantity" value="0" type="number" />
+                <input class="form-input priceInput" id="quantity" name="quantity" min="1" max="@Model.Quantity" value="1" type="number" />
                 <input type="hidden" name="productId" value="@Model.Id" />
-                <button type="submit" class="btn btn-primary">Add To Cart</button>
+                @if (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value != null)
+                {
+                    <button type="submit" id="addToCartBtn" class="btn btn-primary">Add To Cart</button>
+                }
             </div>
         </div>
         <div class="description">

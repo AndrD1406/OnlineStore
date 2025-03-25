@@ -26,10 +26,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Index">Stores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                            @if (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value != null)
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                            }
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Purchase" asp-action="Index">Purchases</a>
+                            @if (User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value != null)
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Purchase" asp-action="Index">Purchases</a>
+                            }
                         </li>
                         <li class="nav-item">
                             @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin") {

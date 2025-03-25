@@ -11,7 +11,7 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Purchase ID</th>
+                <th>Total</th>
                 <th>Date</th>
             </tr>
         </thead>
@@ -19,7 +19,7 @@ else
             @foreach (var purchase in Model)
             {
                 <tr>
-                    <td>@purchase.Id</td>
+                    <td>@purchase.TotalAmount</td>
                     <td>@purchase.CreatedDate.ToString("g")</td>
                 </tr>
             }

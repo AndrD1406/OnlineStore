@@ -60,5 +60,10 @@ else
 
 @using (Html.BeginForm("Create", "Purchase", FormMethod.Post))
 {
-    <button type="submit" class="btn btn-primary">Buy</button>
+    @if (@Model.ProductToCarts != null && Model.ProductToCarts.Count() > 0)
+    {
+        <div class="addButton">
+            <button type="submit" class="button button-blue-back searchButton">Buy</button>
+        </div>
+    }
 }
