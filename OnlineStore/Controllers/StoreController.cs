@@ -115,4 +115,25 @@ public class StoreController : Controller
         await storeService.Delete(id);
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public IActionResult CreateProduct(Guid storeId)
+    {
+        ViewBag.StoreId = storeId;
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateProduct(Product model)
+    {
+        if (ModelState.IsValid)
+        {
+            model.Id = Guid.NewGuid();
+            await productService.Create(model);
+            return RedirectToAction("Details", "Store", new { storeId = model.StoreId });
+        }
+
+        return View(model);
+    }
+
 }
