@@ -5,6 +5,7 @@ using OnlineStore.DataAccess.Models;
 using OnlineStore.DataAccess.Repository.Base;
 using FluentAssertions;
 using System.Linq.Expressions;
+using OnlineStore.BusinessLogic.Services.Interfaces;
 
 namespace OnlineStore.Tests.Services;
 
@@ -12,7 +13,7 @@ public class CartServiceTests
 {
     private Mock<IEntityRepository<Guid, Cart>> _cartRepositoryMock;
     private Mock<IEntityRepository<Guid, ProductToCart>> _cartProductRepositoryMock;
-    private CartService _cartService;
+    private ICartService _cartService;
     private Faker _faker;
 
     [SetUp]

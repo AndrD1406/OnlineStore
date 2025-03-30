@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Moq;
 using OnlineStore.BusinessLogic.Services;
+using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
 using OnlineStore.DataAccess.Repository.Base;
 using OnlineStore.Tests.TestDataGenerators;
@@ -17,7 +18,7 @@ namespace OnlineStore.Tests.Services;
 public class StoreServiceTests
 {
     private Mock<IEntityRepository<Guid, Store>> _repositoryMock;
-    private StoreService _storeService;
+    private IStoreService _storeService;
 
     [SetUp]
     public void Setup()
