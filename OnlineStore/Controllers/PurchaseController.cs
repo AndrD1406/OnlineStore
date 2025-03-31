@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
 using System.Security.Claims;
@@ -20,6 +21,7 @@ public class PurchaseController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -32,6 +34,7 @@ public class PurchaseController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create()
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);

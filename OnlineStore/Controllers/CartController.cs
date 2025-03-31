@@ -17,7 +17,8 @@ public class CartController : Controller
     {
         this._cartService = cartService;
     }
-
+    [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
