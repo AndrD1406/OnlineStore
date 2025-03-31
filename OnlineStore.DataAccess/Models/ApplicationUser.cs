@@ -13,4 +13,5 @@ public class ApplicationUser : IdentityUser<Guid>
     public string? Name { get; set; }
     public IEnumerable<Purchase>? Purchases { get; set; }
     public bool IsAdmin { get; set; }
+
 }

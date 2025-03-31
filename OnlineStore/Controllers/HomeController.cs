@@ -21,13 +21,15 @@ namespace OnlineStore.Controllers;
 [Route("[controller]/[action]")]
 public class HomeController : Controller
 {
+    private readonly ILogger<HomeController> _logger;
     private readonly UserManager<ApplicationUser> userManager;
     private readonly SignInManager<ApplicationUser> signInManager;
     private readonly RoleManager<ApplicationRole> roleManager;
 
-    public HomeController(UserManager<ApplicationUser> userMng,
+    public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userMng,
         SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng)
     {
+        _logger = logger;
         userManager = userMng;
         signInManager = signInMng;
         roleManager = roleMng;
