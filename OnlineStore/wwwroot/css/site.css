@@ -528,7 +528,6 @@ a.link-hover:hover {
 
 .tableDescription {
     max-width: 900px;
-    display: inline-block;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
