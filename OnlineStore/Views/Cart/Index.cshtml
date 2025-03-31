@@ -56,6 +56,20 @@ else
             </tr>
         </tbody>
     </table>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var errors = @Html.Raw(Json.Serialize(TempData["errors"]));
+
+            if (errors) {
+                const errorString = errors.join("\n");
+                ShowError(errorString);
+            }
+        });
+
+        function ShowError(message) {
+            alert(message); 
+        }
+    </script>
 }
 
 @using (Html.BeginForm("Create", "Purchase", FormMethod.Post))

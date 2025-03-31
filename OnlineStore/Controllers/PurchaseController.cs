@@ -59,15 +59,21 @@ public class PurchaseController : Controller
             .ToList();
 
         double totalSum = groupedItems.Sum(x => (x.Product?.Price ?? 0) * x.Quantity);
+        List<string> errors = new List<string>();
 
         foreach (var item in groupedItems)
         {
             if (item.Product == null || item.Product.Quantity < item.Quantity)
-            {
-                TempData["Error"] = $"Not enough stock for product: {item.Product?.Name}";
-                return RedirectToAction("Index", "Cart");
-            }
+                errors.Add($"Not enough stock for product: {item.Product?.Name}, you want to buy {item.Quantity}, but just {item?.Product?.Quantity} are available");
+        }
 
+        if (errors.Count > 0)
+        {
+            TempData["errors"] = errors;
+            return RedirectToAction("Index", "Cart");
+        }
+        foreach (var item in groupedItems)
+        {
             item.Product.Quantity -= item.Quantity;
             await _productService.UpdateProduct(item.Product.Id, item.Product);
         }
