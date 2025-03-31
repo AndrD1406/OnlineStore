@@ -11,19 +11,16 @@ namespace OnlineStore.Controllers;
 [Route("[controller]/[action]")]
 public class StoreController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly IProductService productService;
     private readonly IStoreService storeService;
 
-    public StoreController(ILogger<HomeController> logger, IProductService productService, IStoreService storeService)
+    public StoreController(IProductService productService, IStoreService storeService)
     {
-        _logger = logger;
         this.productService = productService;
         this.storeService = storeService;
     }
 
     [HttpGet]
-    //[Authorize]
     public async Task<IActionResult> Index()
     {
         var stores = await storeService.GetAll();
@@ -87,6 +84,7 @@ public class StoreController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Edit(Guid id, Store store)
     {
         if (!ModelState.IsValid)
