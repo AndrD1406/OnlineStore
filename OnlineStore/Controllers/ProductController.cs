@@ -13,11 +13,13 @@ namespace OnlineStore.Controllers;
 [Route("[controller]/[action]")]
 public class ProductController : Controller
 {
+    private readonly ILogger<HomeController> _logger;
     private readonly IProductService productService;
     private readonly IStoreService storeService;
 
-    public ProductController(IProductService prdService, IStoreService strService)
+    public ProductController(ILogger<HomeController> logger, IProductService prdService, IStoreService strService)
     {
+        _logger = logger;
         productService = prdService;
         storeService = strService;
     }
@@ -45,4 +47,6 @@ public class ProductController : Controller
         var product = await productService.Filter(x => x.Id == id);
         return View(product.FirstOrDefault());
     }
+
+
 }
