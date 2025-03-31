@@ -21,7 +21,6 @@ public class StoreController : Controller
     }
 
     [HttpGet]
-    //[Authorize]
     public async Task<IActionResult> Index()
     {
         var stores = await storeService.GetAll();
@@ -85,6 +84,7 @@ public class StoreController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Edit(Guid id, Store store)
     {
         if (!ModelState.IsValid)
