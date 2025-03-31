@@ -543,3 +543,7 @@ a.link-hover:hover {
     justify-content: center;
 }
 
+.tableRow  {
+    height: 51px;
+}
+
