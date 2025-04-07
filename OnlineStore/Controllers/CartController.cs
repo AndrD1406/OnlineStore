@@ -34,7 +34,6 @@ public class CartController : Controller
             cart = await _cartService.Create(new Cart { Id = Guid.NewGuid(), UserId = userId });
         }
 
-
         return View(cart);
     }
 
