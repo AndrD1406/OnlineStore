@@ -134,4 +134,32 @@ public class StoreController : Controller
         return View(model);
     }
 
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+   public async Task<IActionResult> DeleteProduct(Guid productId, Guid storeId)
+    {
+        if (productId == Guid.Empty || storeId == Guid.Empty)
+        {
+            ModelState.AddModelError("", "Incorrect data.");
+            return RedirectToAction("Details", new { storeId = storeId });
+        }
+
+        if (!User.IsInRole("Admin"))
+        {
+            ModelState.AddModelError("", "You do not have permission to delete the product.");
+            return RedirectToAction("Details", new { storeId = storeId });
+        }
+
+        try
+        {
+            await productService.Delete(productId);
+            return RedirectToAction("Details", new { storeId = storeId });
+        }
+        catch
+        {
+            ModelState.AddModelError("", "Error when deleting a product.");
+            return RedirectToAction("Details", new { storeId = storeId });
+        }
+    }
+
 }
