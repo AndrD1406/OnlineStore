@@ -4,9 +4,11 @@
     ViewData["Title"] = "Store Inventory - " + Model.Store.Name;
 }
 <div>
-<h2>Store Inventory: @Model.Store.Name</h2>
-
-<button type="button" class="btn btn-primary mb-1" onclick="location.href='@Url.Action("CreateProduct", "Store", new { storeId = Model.Store.Id })'">Add Product</button>
+    <h2>Store Inventory: @Model.Store.Name</h2>
+    @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
+    {
+        <button type="button" class="btn btn-primary mb-1" onclick="location.href='@Url.Action("CreateProduct", "Store", new { storeId = Model.Store.Id })'">Add Product</button>
+    }
 
 <form method="get" class="mt-3">
     <input type="hidden" name="storeId" value="@Model.Store.Id" />
