@@ -57,4 +57,12 @@ public class ProductService : IProductService
         var updatedProduct = await this.repository.Update(productToUpdate);
         return updatedProduct;
     }
+    public async Task Delete(Guid productId)
+    {
+        var product = await repository.GetById(productId);
+        if (product != null)
+        {
+            await repository.Delete(product);
+        }
+    }
 }
