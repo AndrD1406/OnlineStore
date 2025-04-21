@@ -18,6 +18,8 @@ public class Cart : IKeyedEntity<Guid>
 
     public ApplicationUser? User { get; set; }
 
+    public string? Coupon { get; set; }
+
     public List<ProductToCart>? ProductToCarts { get; set; } = new List<ProductToCart>();
 
     public Cart() { }

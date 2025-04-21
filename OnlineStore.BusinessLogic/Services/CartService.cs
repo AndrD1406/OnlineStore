@@ -73,4 +73,13 @@ public class CartService : ICartService
             await this.cartProductRepository.Delete(item);
         }
     }
+
+    public async Task<Cart> UpdateCoupon(Guid cartId, string? coupon)
+    {
+        var cart = await repository.GetById(cartId);
+
+        cart.Coupon = coupon;
+        await repository.Update(cart);
+        return cart;
+    }
 }

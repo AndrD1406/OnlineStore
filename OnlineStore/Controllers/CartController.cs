@@ -87,4 +87,33 @@ public class CartController : Controller
 
         return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> ApplyCoupon(string coupon)
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdString, out Guid userId)) return Unauthorized();
+
+        var cart = (await _cartService.GetByUserId(userId)).FirstOrDefault();
+        if (cart == null) return NotFound();
+
+        await _cartService.UpdateCoupon(cart.Id, coupon);
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> RemoveCoupon()
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdString, out Guid userId)) return Unauthorized();
+
+        var cart = (await _cartService.GetByUserId(userId)).FirstOrDefault();
+        if (cart == null) return NotFound();
+
+        await _cartService.UpdateCoupon(cart.Id, null);
+        return RedirectToAction(nameof(Index));
+    }
+
 }

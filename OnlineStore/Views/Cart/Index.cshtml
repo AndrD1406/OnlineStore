@@ -17,6 +17,16 @@
 
 <h2>Your Cart</h2>
 
+<form asp-action="ApplyCoupon" method="post">
+    <input type="text" name="coupon" placeholder="Enter coupon" value="@Model.Coupon" />
+    <button type="submit" class="btn btn-primary">Apply</button>
+</form>
+
+<form asp-action="RemoveCoupon" method="post">
+    <button type="submit" class="btn btn-secondary">Remove Coupon</button>
+</form>
+
+
 @if (!groupedItems.Any())
 {
     <p>Your cart is empty.</p>

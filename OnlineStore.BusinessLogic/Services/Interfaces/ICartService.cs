@@ -16,4 +16,5 @@ public interface ICartService
     Task<Cart> AddProductToCart(Guid id, ProductToCart cartProduct);
     Task RemoveProductFromCart(Guid cartId, Guid productId);
     Task ClearCart(Guid cartId);
+    Task<Cart> UpdateCoupon(Guid cartId, string? coupon);
 }

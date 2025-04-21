@@ -140,5 +140,38 @@ public class CartControllerTests
         var viewResult = (RedirectToActionResult)result;
         viewResult.ActionName.Should().Be("Index");
     }
+
+    [Test]
+    public async Task ApplyCoupon_AuthorizedUser_UpdatesCouponAndRedirects()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var coupon = "SALE20";
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+        };
+
+        var identity = new ClaimsIdentity(claims);
+        _cartController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(identity) }
+        };
+
+        var cart = new Cart { Id = Guid.NewGuid(), UserId = userId };
+
+        _cartService.Setup(x => x.GetByUserId(userId)).ReturnsAsync(new List<Cart> { cart });
+        _cartService.Setup(x => x.UpdateCoupon(cart.Id, coupon)).ReturnsAsync(cart);
+
+        // Act
+        var result = await _cartController.ApplyCoupon(coupon);
+
+        // Assert
+        var redirectResult = (RedirectToActionResult)result;
+        redirectResult.ActionName.Should().Be("Index");
+
+        _cartService.Verify(s => s.UpdateCoupon(cart.Id, coupon), Times.Once);
+    }   
 }
 
