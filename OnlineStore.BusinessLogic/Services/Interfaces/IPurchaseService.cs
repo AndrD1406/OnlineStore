@@ -1,4 +1,5 @@
-﻿using OnlineStore.DataAccess.Models;
+﻿using OnlineStore.BusinessLogic.Dtos;
+using OnlineStore.DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,4 +12,5 @@ public interface IPurchaseService
 {
     Task<IEnumerable<Purchase>> GetAll();
     Task<Purchase> Create(Purchase purchase);
+    Task<IEnumerable<CustomerSpend>> GetTopCustomersForProduct(Guid productId, int topN = 10);
 }

@@ -1,6 +1,5 @@
 ﻿@model Product
 
-
 @using (Html.BeginForm("Add", "Cart", FormMethod.Post))
 {
     <div>
@@ -20,6 +19,15 @@
         </div>
         <div class="description">
             @Model.Description
+        </div>
+
+        <div class="mt-4">
+            <a asp-action="TopBuyers"
+               asp-controller="Product"
+               asp-route-id="@Model.Id"
+               class="btn btn-info">
+                View Top Buyers
+            </a>
         </div>
     </div>
 }

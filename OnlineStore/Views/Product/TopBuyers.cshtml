@@ -1,0 +1,20 @@
+﻿@model IEnumerable<OnlineStore.BusinessLogic.Dtos.CustomerSpend>
+
+<h2>Top Buyers</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Total Spent</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <td>@x.User.Name (@x.User.Email)</td>
+                <td>@x.TotalSpent.ToString("0.00")</td>
+            </tr>
+        }
+    </tbody>
+</table>
