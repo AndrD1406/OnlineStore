@@ -13,16 +13,19 @@ public class Purchase : IKeyedEntity<Guid>
     [Key]
     public Guid Id { get; set; }
 
-    public IEnumerable<Product>? Products { get; set; }
-
     [ForeignKey(nameof(ApplicationUser))]
     public Guid UserId { get; set; }
-
     public ApplicationUser? User { get; set; }
 
     public DateTime CreatedDate { get; set; }
-
     public double TotalAmount { get; set; }
+
+    public ICollection<PurchaseItem> PurchaseItems { get; set; } = new List<PurchaseItem>();
+
+    [NotMapped]
+    public IEnumerable<Product> Products
+        => PurchaseItems.Select(pi => pi.Product!);
 
     public Purchase() { }
 }
+

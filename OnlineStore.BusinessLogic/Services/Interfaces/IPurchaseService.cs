@@ -13,4 +13,7 @@ public interface IPurchaseService
     Task<IEnumerable<Purchase>> GetAll();
     Task<Purchase> Create(Purchase purchase);
     Task<IEnumerable<CustomerSpend>> GetTopCustomersForProduct(Guid productId, int topN = 10);
+    Task<Purchase> CreateWithItems(
+    Purchase purchase,
+    IEnumerable<(Guid productId, int quantity, double unitPrice)> lines);
 }

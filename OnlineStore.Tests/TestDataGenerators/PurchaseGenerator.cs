@@ -31,9 +31,29 @@ public static class PurchaseGenerator
         return purchase;
     }
 
-    public static Purchase WithProducts(this Purchase purchase, int count = 3)
+    public static Purchase WithItems(this Purchase purchase, int count = 3)
     {
-        purchase.Products = ProductGenerator.Generate(count);
+        purchase.PurchaseItems.Clear();
+
+        var products = ProductGenerator.Generate(count);
+
+        foreach (var prod in products)
+        {
+            var item = new PurchaseItem
+            {
+                Id = Guid.NewGuid(),
+                PurchaseId = purchase.Id,
+                ProductId = prod.Id,
+                Product = prod,
+                Quantity = 1,
+                UnitPrice = prod.Price
+            };
+            purchase.PurchaseItems.Add(item);
+        }
+
+        purchase.TotalAmount = purchase.PurchaseItems
+            .Sum(pi => pi.Quantity * pi.UnitPrice);
+
         return purchase;
     }
 
