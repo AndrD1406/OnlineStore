@@ -62,7 +62,7 @@ public class HomeController : Controller
 
             if (result.Succeeded)
             {
-                if (!registerDto.IsAdmin)
+                if (registerDto.IsAdmin)
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
