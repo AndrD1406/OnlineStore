@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
 using System.Security.Claims;
@@ -86,12 +87,11 @@ public class PurchaseController : Controller
             TotalAmount = totalSum
         };
 
-        await _purchaseService.Create(purchase);
+        await _purchaseService.CreateWithItems(purchase, groupedItems.Select(i => (i.Product.Id, i.Quantity, i.Product.Price)));
 
         await _cartService.ClearCart(cart.Id);
 
         return RedirectToAction(nameof(Index));
     }
-
 }
 

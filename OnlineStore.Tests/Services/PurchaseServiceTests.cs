@@ -18,13 +18,15 @@ namespace OnlineStore.Tests.Services;
 public class PurchaseServiceTests
 {
     private Mock<IEntityRepository<Guid, Purchase>> _repositoryMock;
+    private Mock<IEntityRepository<Guid, PurchaseItem>> _repositoryItemMock;
     private IPurchaseService _purchaseService;
 
     [SetUp]
     public void Setup()
     {
         _repositoryMock = new Mock<IEntityRepository<Guid, Purchase>>();
-        _purchaseService = new PurchaseService(_repositoryMock.Object);
+        _repositoryItemMock = new Mock<IEntityRepository<Guid, PurchaseItem>>();
+        _purchaseService = new PurchaseService(_repositoryMock.Object, _repositoryItemMock.Object);
     }
 
     [Test]

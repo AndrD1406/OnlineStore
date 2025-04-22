@@ -20,6 +20,7 @@ namespace OnlineStore
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
+            builder.Services.AddScoped<IEntityRepository<Guid, PurchaseItem>, EntityRepository<Guid, PurchaseItem>>();
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IStoreService, StoreService>();

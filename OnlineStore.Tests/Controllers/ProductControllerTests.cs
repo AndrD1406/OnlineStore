@@ -24,6 +24,7 @@ public class ProductControllerTests
 {
     private Mock<IProductService> productServiceMock;
     private Mock<IStoreService> storeServiceMock;
+    private Mock<IPurchaseService> purchaseServiceMock;
     private ProductController productController;
     private Faker faker;
 
@@ -32,9 +33,17 @@ public class ProductControllerTests
     {
         productServiceMock = new Mock<IProductService>();
         storeServiceMock = new Mock<IStoreService>();
-        productController = new ProductController(productServiceMock.Object, storeServiceMock.Object);
+        purchaseServiceMock = new Mock<IPurchaseService>();
+
+        productController = new ProductController(
+            productServiceMock.Object,
+            storeServiceMock.Object,
+            purchaseServiceMock.Object
+        );
+
         faker = new Faker();
     }
+
     [TearDown]
     public void TearDown()
     {

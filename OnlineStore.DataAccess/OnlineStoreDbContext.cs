@@ -17,6 +17,7 @@ public class OnlineStoreDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Store> Stores { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<ProductToCart> ProductToCarts { get; set; }
+    public DbSet<PurchaseItem> PurchaseItems { get; set; }
     public OnlineStoreDbContext(DbContextOptions options) : base(options)
     {
 
@@ -29,6 +30,7 @@ public class OnlineStoreDbContext : IdentityDbContext<ApplicationUser, Applicati
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
         modelBuilder.ApplyConfiguration(new CartConfiguration());
         modelBuilder.ApplyConfiguration(new ProductToCartConfiguration());
+        modelBuilder.ApplyConfiguration(new PurchaseItemConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }

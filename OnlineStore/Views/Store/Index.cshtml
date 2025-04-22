@@ -7,7 +7,7 @@
     <h2>Stores</h2>
     @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
     {
-        <button type="button" class="btn btn-success buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
+    <button type="button" class="btn btn-success buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
     }
 </div>
 
@@ -25,9 +25,9 @@
             <tr>
                 <td>@store.Name</td>
                 <td class ="buttonsCell">
+                    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
                     @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
                     {
-                        <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
                         <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action("Edit", "Store", new { id = store.Id })'">Edit</button>
                         <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete", "Store", new { id = store.Id })'">Delete</button>
                     }

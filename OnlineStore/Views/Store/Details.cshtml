@@ -3,10 +3,12 @@
 @{
     ViewData["Title"] = "Store Inventory - " + Model.Store.Name;
 }
-
-<h2>Store Inventory: @Model.Store.Name</h2>
-
-<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("CreateProduct", "Store", new { storeId = Model.Store.Id })'">Add Product</button>
+<div>
+    <h2>Store Inventory: @Model.Store.Name</h2>
+    @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
+    {
+        <button type="button" class="btn btn-primary mb-1" onclick="location.href='@Url.Action("CreateProduct", "Store", new { storeId = Model.Store.Id })'">Add Product</button>
+    }
 
 <form method="get" class="mt-3">
     <input type="hidden" name="storeId" value="@Model.Store.Id" />
@@ -35,11 +37,11 @@
         {
             <tr>
                 <td>@product.Name</td>
-                <td>@product.Description</td>
+                <td class="tableDescription">@product.Description</td>
                 <td>@product.Price</td>
                 <td>@product.Quantity</td>
                 <td class="cellCenter">
-                    <button class="btn btn-primary" onclick="location.href=@Url.Action("Details", "Product", new { id = product.Id })'">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Product", new { id = product.Id })'">
                         Details
                     </button>
                 </td>
@@ -47,3 +49,4 @@
         }
     </tbody>
 </table>
+</div>
