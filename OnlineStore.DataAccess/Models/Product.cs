@@ -33,6 +33,8 @@ public class Product: IKeyedEntity<Guid>
 
     public List<ProductToCart> ProductToCarts { get; set; } = new List<ProductToCart>();
 
+    public ICollection<PurchaseItem> PurchaseItems { get; set; } = new List<PurchaseItem>();
+
     public Product()
     {
     }

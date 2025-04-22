@@ -15,12 +15,18 @@ public class ProductController : Controller
 {
     private readonly IProductService productService;
     private readonly IStoreService storeService;
+    private readonly IPurchaseService purchaseService;
 
-    public ProductController(IProductService prdService, IStoreService strService)
+    public ProductController(
+        IProductService prdService,
+        IStoreService strService,
+        IPurchaseService purchaseService)
     {
-        productService = prdService;
-        storeService = strService;
+        this.productService = prdService;
+        this.storeService = strService;
+        this.purchaseService = purchaseService;
     }
+
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
     {
@@ -32,6 +38,7 @@ public class ProductController : Controller
         var products = await productService.Filter(x => (product != null ? x.Name.ToLower().Contains(product.ToLower()) : true) && (storeId != null ? x.StoreId == storeId : true) && (price != null ? x.Price <= price : true));
         return View(products);
     }
+
     [HttpGet]
     [Route("{storeId}")]
     public async Task<IActionResult> GetProductsByStore(Guid storeId)
@@ -39,10 +46,18 @@ public class ProductController : Controller
         var products = await productService.GetByStore(storeId);
         return View(nameof(GetProductsByStore), products);
     }
+
     [HttpGet]
     public async Task<IActionResult> Details([FromQuery] Guid id)
     {
         var product = await productService.Filter(x => x.Id == id);
         return View(product.FirstOrDefault());
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> TopBuyers(Guid id)
+    {
+        var top = await purchaseService.GetTopCustomersForProduct(id, 10);
+        return View(top);
     }
 }
