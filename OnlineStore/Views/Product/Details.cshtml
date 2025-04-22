@@ -21,13 +21,16 @@
             @Model.Description
         </div>
 
-        <div class="mt-4">
-            <a asp-action="TopBuyers"
-               asp-controller="Product"
-               asp-route-id="@Model.Id"
-               class="btn btn-info">
-                View Top Buyers
-            </a>
-        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="mt-4">
+                <a asp-action="TopBuyers"
+                   asp-controller="Product"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-primary text-white">
+                    View Top Buyers
+                </a>
+            </div>
+        }
     </div>
 }

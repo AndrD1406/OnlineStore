@@ -4,17 +4,21 @@
 <table class="table">
     <thead>
         <tr>
+            <th>#</th>
             <th>User</th>
             <th>Total Spent</th>
         </tr>
     </thead>
     <tbody>
+        @{ var index = 1; }
         @foreach (var x in Model)
         {
             <tr>
+                <td>@index</td>
                 <td>@x.User.Name (@x.User.Email)</td>
                 <td>@x.TotalSpent.ToString("0.00")</td>
             </tr>
+            { index++; }
         }
     </tbody>
 </table>
