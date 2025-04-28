@@ -28,16 +28,29 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] string? product, [FromQuery] Guid? storeId, [FromQuery] double? price)
+    public async Task<IActionResult> Index(string? product, Guid? storeId, double? min, double? max)
     {
         var stores = await storeService.GetAll();
+        var allProd = await productService.GetAll();                 
+
         ViewBag.Stores = stores;
         ViewBag.storeId = storeId;
         ViewBag.product = product;
-        ViewBag.price = price;
-        var products = await productService.Filter(x => (product != null ? x.Name.ToLower().Contains(product.ToLower()) : true) && (storeId != null ? x.StoreId == storeId : true) && (price != null ? x.Price <= price : true));
+        ViewBag.min = min;
+        ViewBag.max = max;
+        ViewBag.MinPrice = allProd.Min(p => p.Price);                
+        ViewBag.MaxPrice = allProd.Max(p => p.Price);                
+
+        var products = await productService.Filter(p =>
+            (product != null ? p.Name.ToLower().Contains(product.ToLower()) : true) &&
+            (storeId != null ? p.StoreId == storeId : true) &&
+            (min != null ? p.Price >= min : true) &&
+            (max != null ? p.Price <= max : true));
+
         return View(products);
     }
+
+
 
     [HttpGet]
     [Route("{storeId}")]
