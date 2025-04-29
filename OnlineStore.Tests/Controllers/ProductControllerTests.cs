@@ -57,9 +57,10 @@ public class ProductControllerTests
         var products = ProductGenerator.Generate(5);
         productServiceMock.Setup(s => s.Filter(It.IsAny<Expression<Func<Product, bool>>>()))
             .ReturnsAsync(products);
+        productServiceMock.Setup(s => s.GetAll()).ReturnsAsync(products);
 
         // Act
-        var result = await productController.Index(null, null, null);
+        var result = await productController.Index(null, null, null, null);
         var viewResult = (ViewResult)result;
 
         // Assert
@@ -73,11 +74,11 @@ public class ProductControllerTests
         var price = faker.Random.Int(1, 1000);
         Expression<Func<Product, bool>> filterExpression = p => p.Price <= price;
         var filteredProducts = products.Where(filterExpression.Compile()).ToList();
-        productServiceMock.Setup(s => s.Filter(It.IsAny<Expression<Func<Product, bool>>>()))
-            .ReturnsAsync(filteredProducts);
+        productServiceMock.Setup(s => s.Filter(It.IsAny<Expression<Func<Product, bool>>>())).ReturnsAsync(filteredProducts);
+        productServiceMock.Setup(s => s.GetAll()).ReturnsAsync(products);
 
         // Act
-        var result = await productController.Index(null, null, price);
+        var result = await productController.Index(null, null, 0, price);
         var viewResult = (ViewResult)result;
 
         // Assert
