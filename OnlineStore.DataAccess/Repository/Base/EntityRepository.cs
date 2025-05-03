@@ -103,9 +103,17 @@ public class EntityRepository <TKey, TEntity>: IEntityRepository<TKey, TEntity>
         .ToListAsync();
 
     public async Task<IEnumerable<TEntity>> GetByFilter(
-        Expression<Func<TEntity, bool>> whereExpression,
+        Expression<Func<TEntity, bool>> whereExpression, int page=-1, int pageSize=-1,
         string includeProperties = "")
-        => await this.dbSet
+        => page != -1 && pageSize != -1 ? await this.dbSet
+        .Where(whereExpression)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .IncludeProperties(includeProperties)
+        .ToListAsync()
+        .ConfigureAwait(false) 
+        : 
+        await this.dbSet
         .Where(whereExpression)
         .IncludeProperties(includeProperties)
         .ToListAsync()

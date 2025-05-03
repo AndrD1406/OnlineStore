@@ -547,3 +547,36 @@ a.link-hover:hover {
     height: 51px;
 }
 
+.paginationWrapper {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    position: fixed;
+    transform: translateX(-50%);
+}
+
+.pagination {
+    text-align: center;
+    padding: 10px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination span {
+    margin: 0 5px;
+    padding: 5px 10px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 5px;
+}
