@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
 namespace OnlineStore.Controllers;
@@ -13,6 +14,7 @@ namespace OnlineStore.Controllers;
 [Route("[controller]/[action]")]
 public class ProductController : Controller
 {
+    private const int PAGES_RANGE_SIZE = 9;
     private readonly IProductService productService;
     private readonly IStoreService storeService;
     private readonly IPurchaseService purchaseService;
@@ -28,29 +30,47 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string? product, Guid? storeId, double? min, double? max)
+    public async Task<IActionResult> Index(string? product, Guid? storeId, double? min, double? max, int page = 1, int pageSize = 9)
     {
         var stores = await storeService.GetAll();
-        var allProd = await productService.GetAll();                 
 
         ViewBag.Stores = stores;
         ViewBag.storeId = storeId;
         ViewBag.product = product;
         ViewBag.min = min;
         ViewBag.max = max;
-        ViewBag.MinPrice = allProd.Min(p => p.Price);                
-        ViewBag.MaxPrice = allProd.Max(p => p.Price);                
 
-        var products = await productService.Filter(p =>
+        ViewBag.MinPrice = 0;
+        ViewBag.MaxPrice = double.MaxValue;
+
+        Expression<Func<Product, bool>> filterExpression = p =>
             (product != null ? p.Name.ToLower().Contains(product.ToLower()) : true) &&
             (storeId != null ? p.StoreId == storeId : true) &&
             (min != null ? p.Price >= min : true) &&
-            (max != null ? p.Price <= max : true));
+            (max != null ? p.Price <= max : true);
+
+
+
+        int totalPersons = await productService.Count(filterExpression);
+        int totalPages = (int)Math.Ceiling((double)totalPersons / pageSize);
+
+        int startPage = Math.Max(1, page - PAGES_RANGE_SIZE / 2);
+        int endPage = Math.Min(totalPages, startPage + PAGES_RANGE_SIZE - 1);
+
+        if (endPage - startPage + 1 < PAGES_RANGE_SIZE)
+        {
+            startPage = Math.Max(1, endPage - PAGES_RANGE_SIZE + 1);
+        }
+
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.StartPage = startPage;
+        ViewBag.EndPage = endPage;
+
+        var products = await productService.Filter(filterExpression, page, pageSize);
 
         return View(products);
     }
-
-
 
     [HttpGet]
     [Route("{storeId}")]

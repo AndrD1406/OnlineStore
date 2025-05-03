@@ -63,7 +63,7 @@ public class StoreControllerTests
         var products = ProductGenerator.Generate(5).Select(p => p.WithStore(store)).ToList();
 
         storeServiceMock.Setup(s => s.Get(store.Id)).ReturnsAsync(store);
-        productServiceMock.Setup(s => s.Filter(It.IsAny<Expression<Func<Product, bool>>>())).ReturnsAsync(products);
+        productServiceMock.Setup(s => s.Filter(It.IsAny<Expression<Func<Product, bool>>>(), -1, -1)).ReturnsAsync(products);
 
         // Act
         var result = await storeController.Details(store.Id, null, null);

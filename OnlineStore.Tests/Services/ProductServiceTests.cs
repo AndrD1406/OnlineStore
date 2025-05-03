@@ -67,7 +67,7 @@ public class ProductServiceTests
             .Select(p => { p.StoreId = storeId; return p; })
             .ToList();
         _repositoryMock
-            .Setup(r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), It.IsAny<string>()))
+            .Setup(r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), -1, -1, It.IsAny<string>()))
             .ReturnsAsync(products);
 
         // Act
@@ -76,7 +76,7 @@ public class ProductServiceTests
         // Assert
         result.Should().BeEquivalentTo(products);
         _repositoryMock.Verify(
-            r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), It.IsAny<string>()),
+            r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), -1, -1, It.IsAny<string>()),
             Times.Once);
     }
 
@@ -88,7 +88,7 @@ public class ProductServiceTests
         Expression<Func<Product, bool>> filterExpression = p => p.Price > 100;
         var filteredProducts = products.Where(filterExpression.Compile()).ToList();
         _repositoryMock
-            .Setup(r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), It.IsAny<string>()))
+            .Setup(r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), -1, -1, It.IsAny<string>()))
             .ReturnsAsync(filteredProducts);
 
         // Act
@@ -97,7 +97,7 @@ public class ProductServiceTests
         // Assert
         result.Should().BeEquivalentTo(filteredProducts);
         _repositoryMock.Verify(
-            r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), It.IsAny<string>()),
+            r => r.GetByFilter(It.IsAny<Expression<Func<Product, bool>>>(), -1, -1, It.IsAny<string>()),
             Times.Once);
     }
 
