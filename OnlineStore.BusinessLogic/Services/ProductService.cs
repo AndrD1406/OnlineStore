@@ -36,9 +36,9 @@ public class ProductService : IProductService
         return await repository.GetByFilter(x => x.StoreId == storeId);
     }
 
-    public async Task<IEnumerable<Product>> Filter(Expression<Func<Product, bool>> expression)
+    public async Task<IEnumerable<Product>> Filter(Expression<Func<Product, bool>> expression, int page=-1, int pageSize=-1)
     {
-        return await repository.GetByFilter(expression, nameof(Product.Store));
+        return await repository.GetByFilter(expression, page, pageSize, includeProperties: nameof(Product.Store));
     }
 
     public async Task<Product> UpdateProduct(Guid productId, Product product)

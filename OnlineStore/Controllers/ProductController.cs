@@ -28,29 +28,27 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string? product, Guid? storeId, double? min, double? max)
+    public async Task<IActionResult> Index(string? product, Guid? storeId, double? min, double? max, int page = 0, int pageSize = 9)
     {
         var stores = await storeService.GetAll();
-        var allProd = await productService.GetAll();                 
 
         ViewBag.Stores = stores;
         ViewBag.storeId = storeId;
         ViewBag.product = product;
         ViewBag.min = min;
         ViewBag.max = max;
-        ViewBag.MinPrice = allProd.Min(p => p.Price);                
-        ViewBag.MaxPrice = allProd.Max(p => p.Price);                
+
+        ViewBag.MinPrice = 0;
+        ViewBag.MaxPrice = double.MaxValue;
 
         var products = await productService.Filter(p =>
             (product != null ? p.Name.ToLower().Contains(product.ToLower()) : true) &&
             (storeId != null ? p.StoreId == storeId : true) &&
             (min != null ? p.Price >= min : true) &&
-            (max != null ? p.Price <= max : true));
+            (max != null ? p.Price <= max : true), page, pageSize);
 
         return View(products);
     }
-
-
 
     [HttpGet]
     [Route("{storeId}")]
