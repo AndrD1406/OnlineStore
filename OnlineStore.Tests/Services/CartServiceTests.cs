@@ -29,7 +29,7 @@ public class CartServiceTests
     {
         _cartRepositoryMock
             .Setup(repo => repo.GetByFilter(
-                It.IsAny<Expression<Func<Cart, bool>>>(),
+                It.IsAny<Expression<Func<Cart, bool>>>(), -1, -1,
                 It.IsAny<string>()))
             .ReturnsAsync(carts);
     }
@@ -72,7 +72,7 @@ public class CartServiceTests
     {
         _cartProductRepositoryMock
             .Setup(repo => repo.GetByFilter(
-                It.IsAny<Expression<Func<ProductToCart, bool>>>(),
+                It.IsAny<Expression<Func<ProductToCart, bool>>>(), -1, -1,
                 It.IsAny<string>()))
             .ReturnsAsync(associations);
         _cartProductRepositoryMock
@@ -84,7 +84,7 @@ public class CartServiceTests
     {
         _cartProductRepositoryMock
             .Setup(repo => repo.GetByFilter(
-                It.IsAny<Expression<Func<ProductToCart, bool>>>(),
+                It.IsAny<Expression<Func<ProductToCart, bool>>>(), -1, -1,
                 It.IsAny<string>()))
             .ReturnsAsync(items);
         _cartProductRepositoryMock
@@ -108,7 +108,7 @@ public class CartServiceTests
 
         result.Should().BeEquivalentTo(carts);
         _cartRepositoryMock.Verify(
-            repo => repo.GetByFilter(It.IsAny<Expression<Func<Cart, bool>>>(), It.IsAny<string>()),
+            repo => repo.GetByFilter(It.IsAny<Expression<Func<Cart, bool>>>(), -1, -1, It.IsAny<string>()),
             Times.Once);
     }
 
@@ -197,7 +197,7 @@ public class CartServiceTests
         await _cartService.RemoveProductFromCart(cartId, productId);
 
         _cartProductRepositoryMock.Verify(
-            repo => repo.GetByFilter(It.IsAny<Expression<Func<ProductToCart, bool>>>(), It.IsAny<string>()),
+            repo => repo.GetByFilter(It.IsAny<Expression<Func<ProductToCart, bool>>>(), -1, -1, It.IsAny<string>()),
             Times.Once);
         _cartProductRepositoryMock.Verify(
             repo => repo.Delete(It.IsAny<ProductToCart>()),
@@ -219,7 +219,7 @@ public class CartServiceTests
         await _cartService.ClearCart(cartId);
 
         _cartProductRepositoryMock.Verify(
-            repo => repo.GetByFilter(It.IsAny<Expression<Func<ProductToCart, bool>>>(), It.IsAny<string>()),
+            repo => repo.GetByFilter(It.IsAny<Expression<Func<ProductToCart, bool>>>(), -1, -1, It.IsAny<string>()),
             Times.Once);
         _cartProductRepositoryMock.Verify(
             repo => repo.Delete(It.IsAny<ProductToCart>()),

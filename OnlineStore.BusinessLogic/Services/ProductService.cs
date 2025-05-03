@@ -57,4 +57,9 @@ public class ProductService : IProductService
         var updatedProduct = await this.repository.Update(productToUpdate);
         return updatedProduct;
     }
+
+    public async Task<int> Count (Expression<Func<Product, bool>>? expression)
+    {
+        return await repository.Count(expression);
+    }
 }

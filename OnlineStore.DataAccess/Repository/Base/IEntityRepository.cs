@@ -30,8 +30,9 @@ where TKey : IEquatable<TKey>
 	public Task<IEnumerable<TEntity>> GetAllWithDetails(string includeProperties = "");
 
 	public Task<IEnumerable<TEntity>> GetByFilter(Expression<Func<TEntity, bool>> whereExpression, int page = -1, int pageSize = -1,string includeProperties = "");
+	public Task<int> Count(Expression<Func<TEntity, bool>>? whereExpression);
 
-	public IQueryable<TEntity> GetByFilterNoTracking(Expression<Func<TEntity, bool>> whereExpression,string includeProperties = "");
+    public IQueryable<TEntity> GetByFilterNoTracking(Expression<Func<TEntity, bool>> whereExpression,string includeProperties = "");
 
 	public Task<TEntity> GetById(TKey id);
 
@@ -51,8 +52,6 @@ where TKey : IEquatable<TKey>
 		bool asNoTracking = false);
 
 	public Task<bool> Any(Expression<Func<TEntity, bool>> whereExpression = null);
-
-	public Task<int> Count(Expression<Func<TEntity, bool>> whereExpression = null);
 
 	public Task<int> SaveChangesAsync( bool acceptAllChangesOnSuccess = true, CancellationToken cancellationToken = default);
 
