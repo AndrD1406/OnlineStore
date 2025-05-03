@@ -46,11 +46,15 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
+        if (await userManager.Users.AnyAsync(u => u.Email == registerDto.Email))
+            ModelState.AddModelError("Email", "Email address is already taken.");
+        
         // Validation 
         if (!ModelState.IsValid)
         {
-            string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
-            return Problem(errorMessages);
+            string errorMessages = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)));
+            ViewBag.Errors = errorMessages;
+            return View(registerDto);
         }
 
         ApplicationUser user = new ApplicationUser() { Id = Guid.NewGuid(), Name = registerDto.Name, Email = registerDto.Email, PhoneNumber = registerDto.PhoneNumber, UserName = registerDto.Email };
