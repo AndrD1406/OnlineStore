@@ -580,3 +580,16 @@ a.link-hover:hover {
     background-color: #007bff;
     border-radius: 5px;
 }
+
+.errorMessage {
+    color: red;
+    width: 100%; /* Make the error message take full width */
+    margin-top: 0.25rem;
+    display: block; /* Ensure it is treated as a block element */
+    word-wrap: break-word; /* Handle very long words */
+}
+.formField {
+    display: flex;
+    flex-wrap: nowrap; 
+    margin-bottom: 1rem;
+}
