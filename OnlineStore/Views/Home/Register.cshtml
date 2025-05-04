@@ -15,7 +15,7 @@
             </div>
             <div class="flex-1">
                 <input asp-for="Name" class="form-input" />
-                <span asp-validation-for="Name" class="text-red"></span>
+                <span asp-validation-for="Name" class="text-red errorMessage"></span>
             </div>
         </div>
         @*Email*@
@@ -25,7 +25,7 @@
             </div>
             <div class="flex-1">
                 <input type="text" asp-for="Email" class="form-input" />
-                <span asp-validation-for="Email" class="text-red"></span>
+                <span asp-validation-for="Email" class="text-red errorMessage"></span>
             </div>
         </div>
         @*Phone Number*@
@@ -35,7 +35,7 @@
             </div>
             <div class="flex-1">
                 <input type="text" asp-for="PhoneNumber" class="form-input" />
-                <span asp-validation-for="PhoneNumber" class="text-red"></span>
+                <span asp-validation-for="PhoneNumber" class="text-red errorMessage"></span>
             </div>
         </div>
         @*Password*@
@@ -45,7 +45,7 @@
             </div>
             <div class="flex-1">
                 <input type="password" asp-for="Password" class="form-input" />
-                <span asp-validation-for="Password" class="text-red"></span>
+                <span asp-validation-for="Password" class="text-red errorMessage"></span>
             </div>
         </div>
         @*Confirm Password*@
@@ -55,7 +55,7 @@
             </div>
             <div class="flex-1">
                 <input type="password" asp-for="ConfirmPassword" class="form-input" />
-                <span asp-validation-for="ConfirmPassword" class="text-red"></span>
+                <span asp-validation-for="ConfirmPassword" class="text-red errorMessage"></span>
             </div>
         </div>
         @*Submit*@
@@ -64,17 +64,6 @@
                 <button class="button button-green-back">Register</button>
             </div>
         </div>
-        @*@if(ViewBag.Errors != null)
-        {
-        <div class="text-red ml">
-        <ul>
-        @foreach (string error in ViewBag.Errors)
-        {
-        <li class="ml">@error</li>
-        }
-        </ul>
-        </div>
-        }*@
         @* <div asp-validation-summary="All"></div> *@
     </form>
 </div>

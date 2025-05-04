@@ -10,27 +10,27 @@
 <div class="w-50">
     <form asp-controller="Home" asp-action="Login" method="post">
         @*Email*@
-        <div class="form-field flex">
+        <div class="formField flex">
             <div class="w-25">
                 <label for="Email" class="form-label pt">Email</label>
             </div>
             <div class="flex-1">
-                <input type="text" asp-for="Email" class="form-input" />
-                <span asp-validation-for="Email" class="text-red"></span>
+                <input type="text" asp-for="Email" class="form-input"/>
+                <span asp-validation-for="Email" class="text-red errorMessage"></span>
             </div>
         </div>
         @*Password*@
-        <div class="form-field flex">
+        <div class="formField flex">
             <div class="w-25">
                 <label for="Password" class="form-label pt">Password</label>
             </div>
             <div class="flex-1">
                 <input asp-for="Password" type="password" class="form-input" />
-                <span asp-validation-for="Password" class="text-red"></span>
+                <span asp-validation-for="Password" class="text-red errorMessage"></span>
             </div>
         </div>
         @*Submit*@
-        <div class="form-field flex">
+        <div class="formField flex">
             <div class="flex-1">
                 <button class="button button-green-back">Login</button>
             </div>
