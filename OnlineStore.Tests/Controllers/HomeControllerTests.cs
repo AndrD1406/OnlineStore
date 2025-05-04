@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using MockQueryable.Moq;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using OnlineStore.BusinessLogic.Dtos;
@@ -19,6 +20,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using MockQueryable;
 
 namespace OnlineStore.Tests.Controllers;
 
@@ -94,6 +96,14 @@ public class HomeControllerTests : IDisposable
             IsAdmin = false
         };
 
+        var users = new List<ApplicationUser>
+        {
+        }.AsQueryable();
+
+        var mockUsers = users.AsQueryable().BuildMock();
+
+        // Now return this from your UserManager mock
+        _userManagerMock.Setup(um => um.Users).Returns(mockUsers);
         _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
             .ReturnsAsync(IdentityResult.Success);
         _userManagerMock.Setup(um => um.AddToRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
