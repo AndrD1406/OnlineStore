@@ -5,6 +5,7 @@ using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
 using OnlineStore.Models;
+using System.Drawing.Printing;
 
 namespace OnlineStore.Controllers;
 
@@ -21,9 +22,19 @@ public class StoreController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 9)
     {
-        var stores = await storeService.GetAll();
+        int totalStores = await storeService.Count(x => true);
+        int totalPages = (int)Math.Ceiling((double)totalStores / pageSize);
+
+        int startPage = Math.Max(1, page - 2);
+        int endPage = Math.Min(totalPages, page + 2);
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.StartPage = startPage;
+        ViewBag.EndPage = endPage;
+
+        var stores = await storeService.Filter(x => true, page, pageSize);
         return View(stores);
     }
 

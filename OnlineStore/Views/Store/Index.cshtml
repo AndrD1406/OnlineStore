@@ -35,4 +35,23 @@
                 </tr>
         }
     </tbody>
+    <div class="paginationWrapper">
+        <div class="pagination">
+            @for (int i = ViewBag.StartPage; i <= ViewBag.EndPage; i++)
+            {
+                if (i == ViewBag.CurrentPage)
+                {
+                    <span>@i</span>
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", new {
+                        page = i
+                    })">
+                        @i
+                    </a>
+                }
+            }
+        </div>
+    </div>
 </table>
