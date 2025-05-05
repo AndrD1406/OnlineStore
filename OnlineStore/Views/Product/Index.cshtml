@@ -80,24 +80,9 @@
                 </div>
             </main>
 
+    <div>
+        @await Html.PartialAsync("_Pagination")
     </div>
-</div>
-    <div class="paginationWrapper">
-        <div class="pagination">
-            @for (int i = ViewBag.StartPage; i <= ViewBag.EndPage; i++)
-            {
-                if (i == ViewBag.CurrentPage)
-                {
-                   <span>@i</span>
-                }
-                else
-                {
-                    <a href="@Url.Action("Index", new { product=search, storeId , min=minSel, max=maxSel, page = i })">@i</a>
-                }
-            }
-        </div>
-    </div>
-</div>
 <style>
     /* clamp description to 2 lines */
     .card-description {

@@ -60,12 +60,22 @@ public class ProductController : Controller
         if (endPage - startPage + 1 < PAGES_RANGE_SIZE)
         {
             startPage = Math.Max(1, endPage - PAGES_RANGE_SIZE + 1);
-        }
+        }        
+        
 
         ViewBag.CurrentPage = page;
+        ViewBag.PageSize = pageSize;
         ViewBag.TotalPages = totalPages;
         ViewBag.StartPage = startPage;
         ViewBag.EndPage = endPage;
+        ViewBag.ActionName = nameof(Index);
+
+        ViewBag.RouteValues = new Dictionary<string, object>
+        {
+            ["min"] = ViewBag.min,
+            ["max"] = ViewBag.max,
+            ["storeId"] = ViewBag.storeId
+        };
 
         var products = await productService.Filter(filterExpression, page, pageSize);
 

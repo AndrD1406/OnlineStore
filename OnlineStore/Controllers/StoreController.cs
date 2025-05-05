@@ -6,12 +6,14 @@ using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
 using OnlineStore.Models;
 using System.Drawing.Printing;
+using System.Linq.Expressions;
 
 namespace OnlineStore.Controllers;
 
 [Route("[controller]/[action]")]
 public class StoreController : Controller
 {
+    private const int PAGES_RANGE_SIZE = 9;
     private readonly IProductService productService;
     private readonly IStoreService storeService;
 
@@ -29,10 +31,21 @@ public class StoreController : Controller
 
         int startPage = Math.Max(1, page - 2);
         int endPage = Math.Min(totalPages, page + 2);
+
         ViewBag.CurrentPage = page;
+        ViewBag.PageSize = pageSize;
         ViewBag.TotalPages = totalPages;
         ViewBag.StartPage = startPage;
         ViewBag.EndPage = endPage;
+        ViewBag.ActionName = nameof(Index);
+
+        ViewBag.RouteValues = new Dictionary<string, object>
+        {
+            ["min"] = ViewBag.min,
+            ["max"] = ViewBag.max,
+            ["storeId"] = ViewBag.storeId
+        };
+
 
         var stores = await storeService.Filter(x => true, page, pageSize);
         return View(stores);

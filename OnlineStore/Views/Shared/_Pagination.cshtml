@@ -1,0 +1,22 @@
+﻿@if (ViewBag.TotalPages > 1)
+{
+  <div class="paginationWrapper">
+    <div class="pagination">
+      @for (int i = ViewBag.StartPage; i <= ViewBag.EndPage; i++)
+      {
+        if (i == ViewBag.CurrentPage)
+        {
+          <span>@i</span>
+        }
+        else
+        {
+          <a asp-action="@ViewBag.ActionName"
+             asp-route-page="@i"
+             asp-route-pageSize="@ViewBag.PageSize">
+            @i
+          </a>
+        }
+      }
+    </div>
+  </div>
+}

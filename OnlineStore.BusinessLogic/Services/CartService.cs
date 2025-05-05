@@ -4,6 +4,7 @@ using OnlineStore.DataAccess.Repository.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,4 +74,10 @@ public class CartService : ICartService
             await this.cartProductRepository.Delete(item);
         }
     }
+
+    public async Task<int> Count(Expression<Func<Cart, bool>>? expression = null)
+        => await repository.Count(expression);
+
+    public async Task<IEnumerable<Cart>> Filter(Expression<Func<Cart, bool>> expression, int page = -1, int pageSize = -1)
+        => await repository.GetByFilter(expression, page, pageSize, includeProperties: nameof(Cart.User));
 }

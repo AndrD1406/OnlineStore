@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,4 +17,7 @@ public interface ICartService
     Task<Cart> AddProductToCart(Guid id, ProductToCart cartProduct);
     Task RemoveProductFromCart(Guid cartId, Guid productId);
     Task ClearCart(Guid cartId);
+    Task<int> Count(Expression<Func<Cart, bool>>? expression = null);
+    Task<IEnumerable<Cart>> Filter(Expression<Func<Cart, bool>> expression, int page = -1, int pageSize = -1);
+
 }
