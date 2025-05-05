@@ -96,7 +96,7 @@ public class StoreController : Controller
     }
 
     [HttpGet]
-    [Authorize(Roles ="User", AuthenticationSchemes =CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "User", AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Edit(Guid id)
     {
         var store = await storeService.Get(id);
@@ -115,7 +115,7 @@ public class StoreController : Controller
         {
             return View(store);
         }
-                
+
         await storeService.Update(id, store);
         return RedirectToAction(nameof(Index));
     }
@@ -157,5 +157,32 @@ public class StoreController : Controller
 
         return View(model);
     }
+
+    // GET: /Store/DeleteProduct?storeId={storeId}&productId={productId}
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> DeleteProduct(Guid storeId, Guid productId)
+    {
+        // Перевіряємо, що магазин існує
+        var store = await storeService.Get(storeId);
+        if (store == null)
+        {
+            return NotFound($"Store with id {storeId} not found");
+        }
+
+        // Шукаємо товар у цьому магазині
+        var products = await productService.Filter(p => p.Id == productId && p.StoreId == storeId);
+        var product = products.FirstOrDefault();
+        if (product == null)
+        {
+            return NotFound($"Product with id {productId} not found in this store");
+        }
+
+        // Видаляємо товар
+        await productService.Delete(productId);
+
+        // Повертаємося на Details магазину
+        return RedirectToAction(nameof(Details), new { storeId = storeId });
+    }  
 
 }
