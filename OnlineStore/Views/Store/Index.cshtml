@@ -1,41 +1,59 @@
 ﻿@model IEnumerable<OnlineStore.DataAccess.Models.Store>
 
 @{
-    ViewData["Title"] = "Stores";
+    ViewBag.Title = "Stores";
 }
-<div class="headerWithButton">
-    <h2>Stores</h2>
-    @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
-    {
-    <button type="button" class="btn btn-success buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
-    }
-</div>
 
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Stores</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var store in Model)
+<div class="container mt-4">
+    <h1 class="mb-4">
+        Stores 
+        @if (User.IsInRole("Admin"))
         {
-            <tr>
-                <td>@store.Name</td>
-                <td class ="buttonsCell">
-                    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
-                    @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
-                    {
-                        <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action("Edit", "Store", new { id = store.Id })'">Edit</button>
-                        <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete", "Store", new { id = store.Id })'">Delete</button>
-                    }
-                </td>
-                </tr>
+            <button type="button" class="btn btn-success buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
         }
-    </tbody>
-    <div>
-        @await Html.PartialAsync("_Pagination")
+    </h1>    
+
+    <!-- Сітка карточок магазинів -->
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var store in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">                            
+                            <div>
+                                <!-- Назва магазину -->
+                                <h5 class="card-title">@store.Name</h5>
+                                <!-- Кількість товарів -->
+                                <p class="card-title">
+                                    Products: @(store.Products?.Count() ?? 0)
+                                </p>
+                            </div>
+
+                            <!-- Дії -->
+                            <div class="mt-auto">
+                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
+                                
+                                @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
+                                {
+                                    <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action("Edit", "Store", new { id = store.Id })'">Edit</button>
+                                    <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete", "Store", new { id = store.Id })'">Delete</button>
+                                }                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <p class="text-muted">No stores found.</p>
+            </div>
+        }
     </div>
-</table>
+
+    <!-- Пагінація (якщо є) -->
+    @Html.Partial("_Pagination")
+</div>
