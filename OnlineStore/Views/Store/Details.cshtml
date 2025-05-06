@@ -8,7 +8,7 @@
     <h1 class="mb-4">@Model.Store.Name
         @if (User.IsInRole("Admin"))
         {
-            <button type="button" class="btn btn-primary mb-3" onclick="location.href='@Url.Action("CreateProduct", "Store", new { storeId = Model.Store.Id })'">Add New Product</button>
+            <button type="button" class="btn btn-success buttonRight" onclick="location.href='@Url.Action("CreateProduct", "Store", new { storeId = Model.Store.Id })'">Add New Product</button>
         }
     </h1>
 
@@ -41,7 +41,7 @@
                             <h5 class="card-title">@product.Name</h5>
                             <p class="card-text flex-grow-1">@product.Description</p>
                             <div class="flex-column">
-                                <strong>Price:</strong> @product.Price.ToString("C")
+                                <strong>Price:</strong> @product.Price.ToString("C")<br>
                                 <strong>Quantity:</strong> @product.Quantity
                             </div>
                             <br>
