@@ -51,30 +51,47 @@ public class StoreController : Controller
         return View(stores);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Details(Guid storeId, string? product, double? price)
+    public async Task<IActionResult> Details(Guid storeId, string? product, double? price, int page = 1)
     {
+        const int pageSize = 6;  
+
         var store = await storeService.Get(storeId);
-        if (store == null)
-        {
-            return NotFound();
-        }
+        if (store == null) return NotFound();
 
         ViewBag.storeId = storeId;
-        var products = await productService.Filter(x =>
+        ViewBag.ProductFilter = product;
+        ViewBag.PriceFilter = price;
+
+        Expression<Func<Product, bool>> filter = x =>
             x.StoreId == storeId &&
             (string.IsNullOrEmpty(product) || x.Name.ToLower().Contains(product.ToLower())) &&
-            (!price.HasValue || x.Price <= price));
+            (!price.HasValue || x.Price <= price);
 
-        var viewModel = new StoreDetailsViewModel
+        var totalItems = await productService.Count(filter);
+        var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+        int startPage = Math.Max(1, page - 2);
+        int endPage = Math.Min(totalPages, startPage + 4);
+        if (endPage - startPage < 4)
+            startPage = Math.Max(1, endPage - 4);
+
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.StartPage = startPage;
+        ViewBag.EndPage = endPage;
+        ViewBag.ActionName = nameof(Details);
+        ViewBag.RouteValues = new { storeId, product, price };
+
+        var products = await productService.Filter(filter, page, pageSize);
+
+        var vm = new StoreDetailsViewModel
         {
             Store = store,
             Products = products,
             ProductFilter = product,
             PriceFilter = price
         };
-
-        return View(viewModel);
+        return View(vm);
     }
 
     [HttpGet]
@@ -183,6 +200,6 @@ public class StoreController : Controller
 
         // Повертаємося на Details магазину
         return RedirectToAction(nameof(Details), new { storeId = storeId });
-    }  
+    }
 
 }

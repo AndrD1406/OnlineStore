@@ -1,22 +1,43 @@
-﻿@if (ViewBag.TotalPages > 1)
-{
-  <div class="paginationWrapper">
-    <div class="pagination">
-      @for (int i = ViewBag.StartPage; i <= ViewBag.EndPage; i++)
-      {
-        if (i == ViewBag.CurrentPage)
-        {
-          <span>@i</span>
-        }
-        else
-        {
-          <a asp-action="@ViewBag.ActionName"
-             asp-route-page="@i"
-             asp-route-pageSize="@ViewBag.PageSize">
-            @i
-          </a>
-        }
-      }
-    </div>
-  </div>
+﻿@{
+    // Збираємо дані з ViewBag
+    var action = ViewBag.ActionName as string ?? "Details";
+    var current = (int)(ViewBag.CurrentPage ?? 1);
+    var total = (int)(ViewBag.TotalPages ?? 1);
+    var start = (int)(ViewBag.StartPage ?? 1);
+    var end = (int)(ViewBag.EndPage ?? total);
+    var storeId = ViewBag.storeId;
+    var product = ViewBag.ProductFilter as string;
+    var price = (double?)(ViewBag.PriceFilter);
 }
+
+<footer class="paginationWrapper">
+    <ul class="pagination justify-content-center">
+
+        <!-- Previous -->
+        <li class="page-item @(current <= 1 ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action(action, new { storeId, product = product, price = price, page = current - 1 })"
+               tabindex="-1">Previous</a>
+        </li>
+
+        <!-- Номери сторінок -->
+        @for (int i = start; i <= end; i++)
+        {
+            <li class="page-item @(i == current ? "active" : "")">
+                <a class="page-link"
+                   href="@Url.Action(action, new { storeId, product = product, price = price, page = i })">
+                    @i
+                </a>
+            </li>
+        }
+
+        <!-- Next -->
+        <li class="page-item @(current >= total ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action(action, new { storeId, product = product, price = price, page = current + 1 })">
+                Next
+            </a>
+        </li>
+
+    </ul>
+</footer>
