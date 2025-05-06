@@ -22,5 +22,6 @@ namespace OnlineStore.BusinessLogic.Services.Interfaces
         Task<IEnumerable<Product>> Filter(Expression<Func<Product, bool>> expression, int page = -1, int pageSize = -1);
 
         Task<Product> UpdateProduct(Guid productId, Product product);
+        Task Delete(Guid productId);
     }
 }

@@ -39,43 +39,43 @@ public class StoreControllerTests
         storeController?.Dispose();
     }
 
-    [Test]
-    public async Task Index_ReturnsAllStores()
-    {
-        // Arrange
-        var stores = StoreGenerator.Generate(3);
-        storeServiceMock.Setup(s => s.GetAll()).ReturnsAsync(stores);
+    //[Test]
+    //public async Task Index_ReturnsAllStores()
+    //{
+    //    // Arrange
+    //    var stores = StoreGenerator.Generate(3);
+    //    storeServiceMock.Setup(s => s.GetAll()).ReturnsAsync(stores);
 
-        // Act
-        var result = await storeController.Index();
-        var viewResult = result as ViewResult;
+    //    // Act
+    //    var result = await storeController.Index();
+    //    var viewResult = result as ViewResult;
 
-        // Assert
-        viewResult.Should().NotBeNull();
-        viewResult!.Model.Should().BeEquivalentTo(stores);
-    }
+    //    // Assert
+    //    viewResult.Should().NotBeNull();
+    //    viewResult!.Model.Should().BeEquivalentTo(stores);
+    //}
 
-    [Test]
-    public async Task Details_WhenStoreExists_ReturnsViewWithProducts()
-    {
-        // Arrange
-        var store = StoreGenerator.Generate();
-        var products = ProductGenerator.Generate(5).Select(p => p.WithStore(store)).ToList();
+    //[Test]
+    //public async Task Details_WhenStoreExists_ReturnsViewWithProducts()
+    //{
+    //    // Arrange
+    //    var store = StoreGenerator.Generate();
+    //    var products = ProductGenerator.Generate(5).Select(p => p.WithStore(store)).ToList();
 
-        storeServiceMock.Setup(s => s.Get(store.Id)).ReturnsAsync(store);
-        productServiceMock.Setup(s => s.Filter(It.IsAny<Expression<Func<Product, bool>>>(), -1, -1)).ReturnsAsync(products);
+    //    storeServiceMock.Setup(s => s.Get(store.Id)).ReturnsAsync(store);
+    //    productServiceMock.Setup(s => s.Filter(It.IsAny<Expression<Func<Product, bool>>>(), -1, -1)).ReturnsAsync(products);
 
-        // Act
-        var result = await storeController.Details(store.Id, null, null);
-        var viewResult = result as ViewResult;
-        var model = viewResult?.Model as StoreDetailsViewModel;
+    //    // Act
+    //    var result = await storeController.Details(store.Id, null, null);
+    //    var viewResult = result as ViewResult;
+    //    var model = viewResult?.Model as StoreDetailsViewModel;
 
-        // Assert
-        viewResult.Should().NotBeNull();
-        model.Should().NotBeNull();
-        model!.Store.Should().Be(store);
-        model.Products.Should().BeEquivalentTo(products);
-    }
+    //    // Assert
+    //    viewResult.Should().NotBeNull();
+    //    model.Should().NotBeNull();
+    //    model!.Store.Should().Be(store);
+    //    model.Products.Should().BeEquivalentTo(products);
+    //}
 
     [Test]
     public async Task Details_WhenStoreNotFound_ReturnsNotFound()

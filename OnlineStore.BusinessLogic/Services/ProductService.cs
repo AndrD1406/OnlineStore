@@ -58,8 +58,16 @@ public class ProductService : IProductService
         return updatedProduct;
     }
 
-    public async Task<int> Count (Expression<Func<Product, bool>>? expression)
+    public async Task<int> Count(Expression<Func<Product, bool>>? expression)
     {
         return await repository.Count(expression);
+    }
+    public async Task Delete(Guid productId)
+    {
+        var productToDelete = await this.repository.GetById(productId);
+        if (productToDelete == null)
+            throw new KeyNotFoundException($"Product with id {productId} not found.");
+
+        await this.repository.Delete(productToDelete);
     }
 }
