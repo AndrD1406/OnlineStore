@@ -8,7 +8,7 @@
         await Html.RenderPartialAsync("UserSearchComponent", new ViewDataDictionary(ViewData));
     }
 </div>
-<table class="table w-100 mt products">
+<table class="table w-100 mt products" style="margin-top: 30px">
     <thead>
         <tr>
             <td>Name</td>
@@ -38,6 +38,9 @@
         }
     </tbody>
 </table>
-<div class="addButton">
+<div>
+    @await Html.PartialAsync("_Pagination")
+</div>
+<div class="addButton createUserButton">
     <button class="btn btn-primary searchButton" onclick="location.href='@(Url.Action("CreateUser", "Home"))'">Create</button>
 </div>

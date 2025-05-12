@@ -603,3 +603,9 @@ a.link-hover:hover {
     left: 1240px;
     top: 50px;
 }
+
+.createUserButton {
+    position: fixed;
+    bottom: 30px;
+    right: 150px;
+}

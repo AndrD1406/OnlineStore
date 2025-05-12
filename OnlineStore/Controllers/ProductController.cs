@@ -50,8 +50,6 @@ public class ProductController : Controller
             (min != null ? p.Price >= min : true) &&
             (max != null ? p.Price <= max : true);
 
-
-
         int totalPersons = await productService.Count(filterExpression);
         int totalPages = (int)Math.Ceiling((double)totalPersons / pageSize);
 
@@ -63,7 +61,6 @@ public class ProductController : Controller
             startPage = Math.Max(1, endPage - PAGES_RANGE_SIZE + 1);
         }        
         
-
         ViewBag.CurrentPage = page;
         ViewBag.PageSize = pageSize;
         ViewBag.TotalPages = totalPages;
