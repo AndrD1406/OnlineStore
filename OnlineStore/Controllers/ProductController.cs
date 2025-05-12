@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
+using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
@@ -100,6 +101,13 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<IActionResult> TopBuyers(Guid id)
     {
+        ViewBag.CurrentPage = 1;
+        ViewBag.PageSize = 10;
+        ViewBag.TotalPages = 1;
+        ViewBag.StartPage = 1;
+        ViewBag.EndPage = 1;
+        ViewBag.ActionName = nameof(Index);
+
         var top = await purchaseService.GetTopCustomersForProduct(id, 10);
         return View(top);
     }
