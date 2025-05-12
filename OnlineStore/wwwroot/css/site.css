@@ -595,11 +595,11 @@ a.link-hover:hover {
 }
 
 .cartTable {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .buyButton {
     position: fixed;
     left: 1240px;
-    top: 70px;
+    top: 50px;
 }

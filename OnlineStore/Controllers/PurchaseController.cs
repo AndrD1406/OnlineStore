@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace OnlineStore.Controllers;
@@ -13,6 +14,7 @@ public class PurchaseController : Controller
     private readonly IPurchaseService _purchaseService;
     private readonly ICartService _cartService;
     private readonly IProductService _productService;
+    private const int PAGES_RANGE_SIZE = 12;
 
     public PurchaseController(IPurchaseService purchaseService, ICartService cartService, IProductService productService)
     {
@@ -23,14 +25,33 @@ public class PurchaseController : Controller
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 12)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(userIdString, out Guid userId))
             return Unauthorized();
 
-        var purchases = await _purchaseService.GetAll();
-        var userPurchases = purchases.Where(p => p.UserId == userId);
+        Expression<Func<Purchase, bool>> filterExpression = p => p.UserId == userId;
+
+        int totalPersons = await _purchaseService.Count(filterExpression);
+        int totalPages = (int)Math.Ceiling((double)totalPersons / pageSize);
+
+        int startPage = Math.Max(1, page - PAGES_RANGE_SIZE / 2);
+        int endPage = Math.Min(totalPages, startPage + PAGES_RANGE_SIZE - 1);
+
+        if (endPage - startPage + 1 < PAGES_RANGE_SIZE)
+        {
+            startPage = Math.Max(1, endPage - PAGES_RANGE_SIZE + 1);
+        }
+
+        ViewBag.CurrentPage = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.StartPage = startPage;
+        ViewBag.EndPage = endPage;
+        ViewBag.ActionName = nameof(Index);
+
+        var userPurchases = await _purchaseService.Filter(filterExpression, page, pageSize);
         return View(userPurchases);
     }
 
