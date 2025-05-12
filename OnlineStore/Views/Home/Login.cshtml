@@ -1,39 +1,28 @@
 ﻿@model LoginDto
-
 @{
     ViewBag.Title = "Login";
 }
 
-
-<a asp-controller="Home" asp-action="Register" class="link-hover">Register</a>
-<h2>@ViewBag.Title</h2>
-<div class="w-50">
-    <form asp-controller="Home" asp-action="Login" method="post">
-        @*Email*@
-        <div class="formField flex">
-            <div class="w-25">
-                <label for="Email" class="form-label pt">Email</label>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card p-4" style="width: 350px;">
+        <h4 class="card-title text-center mb-4">Login</h4>
+        <form asp-action="Login" method="post">
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="flex-1">
-                <input type="text" asp-for="Email" class="form-input"/>
-                <span asp-validation-for="Email" class="text-red errorMessage"></span>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+        <div class="text-center mt-2">
+            <a asp-action="Register" class="small">Register</a>
         </div>
-        @*Password*@
-        <div class="formField flex">
-            <div class="w-25">
-                <label for="Password" class="form-label pt">Password</label>
-            </div>
-            <div class="flex-1">
-                <input asp-for="Password" type="password" class="form-input" />
-                <span asp-validation-for="Password" class="text-red errorMessage"></span>
-            </div>
-        </div>
-        @*Submit*@
-        <div class="formField flex">
-            <div class="flex-1">
-                <button class="button button-green-back">Login</button>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>

@@ -1,69 +1,43 @@
 ﻿@model RegisterDto
-
-@{ 
-    ViewBag.Title = "Register"; 
+@{
+    ViewData["Title"] = "Register";
 }
 
-<a asp-controller="Home" asp-action="Login" class="link-hover">Login</a>
-<h2>@ViewBag.Title</h2>
-<div class="w-50">
-    <form asp-controller="Home" asp-action="Register" method="post">
-        @*Name*@
-        <div class="form-field flex">
-            <div class="w-25">
-                <label for="Name" class="form-label pt">Name</label>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card p-4" style="width: 350px;">
+        <h4 class="card-title text-center mb-4">Register</h4>
+        <form asp-action="Register" method="post">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="flex-1">
-                <input asp-for="Name" class="form-input" />
-                <span asp-validation-for="Name" class="text-red errorMessage"></span>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+        <div class="text-center mt-2">
+            <a asp-action="Login" class="small">Login</a>
         </div>
-        @*Email*@
-        <div class="form-field flex">
-            <div class="w-25">
-                <label for="Email" class="form-label pt">Email</label>
-            </div>
-            <div class="flex-1">
-                <input type="text" asp-for="Email" class="form-input" />
-                <span asp-validation-for="Email" class="text-red errorMessage"></span>
-            </div>
-        </div>
-        @*Phone Number*@
-        <div class="form-field flex">
-            <div class="w-25">
-                <label for="PhoneNumber" class="form-label pt">Phone Number</label>
-            </div>
-            <div class="flex-1">
-                <input type="text" asp-for="PhoneNumber" class="form-input" />
-                <span asp-validation-for="PhoneNumber" class="text-red errorMessage"></span>
-            </div>
-        </div>
-        @*Password*@
-        <div class="form-field flex">
-            <div class="w-25">
-                <label for="Password" class="form-label pt">Password</label>
-            </div>
-            <div class="flex-1">
-                <input type="password" asp-for="Password" class="form-input" />
-                <span asp-validation-for="Password" class="text-red errorMessage"></span>
-            </div>
-        </div>
-        @*Confirm Password*@
-        <div class="form-field flex">
-            <div class="w-25">
-                <label for="Password" class="form-label pt">Confirm Password</label>
-            </div>
-            <div class="flex-1">
-                <input type="password" asp-for="ConfirmPassword" class="form-input" />
-                <span asp-validation-for="ConfirmPassword" class="text-red errorMessage"></span>
-            </div>
-        </div>
-        @*Submit*@
-        <div class="form-field flex">
-            <div class="flex-1">
-                <button class="button button-green-back">Register</button>
-            </div>
-        </div>
-        @* <div asp-validation-summary="All"></div> *@
-    </form>
+    </div>
 </div>
