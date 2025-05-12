@@ -15,6 +15,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MySqlX.XDevAPI.Common;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
+using System.Linq.Expressions;
 
 namespace OnlineStore.Controllers;
 
@@ -24,6 +26,7 @@ public class HomeController : Controller
     private readonly UserManager<ApplicationUser> userManager;
     private readonly SignInManager<ApplicationUser> signInManager;
     private readonly RoleManager<ApplicationRole> roleManager;
+    private const int PAGES_RANGE_SIZE = 7;
 
     public HomeController(UserManager<ApplicationUser> userMng,
         SignInManager<ApplicationUser> signInMng, RoleManager<ApplicationRole> roleMng)
@@ -237,12 +240,32 @@ public class HomeController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Users([FromQuery] string? name, [FromQuery] string? email)
+    public async Task<IActionResult> Users([FromQuery] string? name, [FromQuery] string? email, int page = 1, int pageSize = 7)
     {
         ViewBag.name = name;
         ViewBag.email = email;
-        var users = await userManager.Users.Where(x => (name != null ? x.Name.ToLower().Contains(name.ToLower()) : true) && (email != null ? x.Email.ToLower().Contains(email.ToLower()) : true)).ToListAsync();
 
+        Expression<Func<ApplicationUser, bool>> filterExpression = x => (name != null ? x.Name.ToLower().Contains(name.ToLower()) : true) && (email != null ? x.Email.ToLower().Contains(email.ToLower()) : true);
+
+        var users = await userManager.Users.Where(filterExpression).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        int totalPersons = userManager.Users.Where(filterExpression).Count();
+
+        int totalPages = (int)Math.Ceiling((double)totalPersons / pageSize);
+
+        int startPage = Math.Max(1, page - PAGES_RANGE_SIZE / 2);
+        int endPage = Math.Min(totalPages, startPage + PAGES_RANGE_SIZE - 1);
+
+        if (endPage - startPage + 1 < PAGES_RANGE_SIZE)
+        {
+            startPage = Math.Max(1, endPage - PAGES_RANGE_SIZE + 1);
+        }
+
+        ViewBag.CurrentPage = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.StartPage = startPage;
+        ViewBag.EndPage = endPage;
+        ViewBag.ActionName = nameof(Users);
 
         List<object> userList = new List<object>();
         foreach (var user in users)

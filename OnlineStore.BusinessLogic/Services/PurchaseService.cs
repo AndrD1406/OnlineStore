@@ -5,6 +5,7 @@ using OnlineStore.DataAccess.Repository.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,7 +51,6 @@ public class PurchaseService : IPurchaseService
 
         return created;
     }
-
     public async Task<IEnumerable<CustomerSpend>> GetTopCustomersForProduct(Guid productId, int topN = 10)
     {
         var items = await purchaseItemRepository.GetByFilter(
@@ -70,6 +70,15 @@ public class PurchaseService : IPurchaseService
             .ToList();
 
         return top;
+    }
+
+    public async Task<IEnumerable<Purchase>> Filter(Expression<Func<Purchase, bool>> expression, int page = -1, int pageSize = -1)
+    {
+        return await repository.GetByFilter(expression, page, pageSize);
+    }
+    public async Task<int> Count(Expression<Func<Purchase, bool>>? expression)
+    {
+        return await repository.Count(expression);
     }
 }
 
