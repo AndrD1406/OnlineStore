@@ -34,7 +34,7 @@ public class CartControllerTests
         _cartController.Dispose();
     }
     [Test]
-    public async Task Index_AuthorizedWhenNotCartExists_ReturnsViewCart()
+    public async Task Index_AuthorizedWhenNoCartExists_ReturnsViewCart()
     {
         // Arrange
         var userId = Guid.NewGuid().ToString();

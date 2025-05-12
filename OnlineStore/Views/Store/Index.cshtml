@@ -57,7 +57,9 @@
         }
     </div>
 
-    @Html.Partial("_Pagination")
+    <div>
+        @await Html.PartialAsync("_Pagination")
+    </div>
 </div>
 
 <script>

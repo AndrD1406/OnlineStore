@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using OnlineStore.BusinessLogic.Services;
 using OnlineStore.BusinessLogic.Services.Interfaces;
 using OnlineStore.DataAccess.Models;
+using System.Drawing.Printing;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
@@ -49,8 +50,6 @@ public class ProductController : Controller
             (min != null ? p.Price >= min : true) &&
             (max != null ? p.Price <= max : true);
 
-
-
         int totalPersons = await productService.Count(filterExpression);
         int totalPages = (int)Math.Ceiling((double)totalPersons / pageSize);
 
@@ -62,7 +61,6 @@ public class ProductController : Controller
             startPage = Math.Max(1, endPage - PAGES_RANGE_SIZE + 1);
         }        
         
-
         ViewBag.CurrentPage = page;
         ViewBag.PageSize = pageSize;
         ViewBag.TotalPages = totalPages;
@@ -100,6 +98,13 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<IActionResult> TopBuyers(Guid id)
     {
+        ViewBag.CurrentPage = 1;
+        ViewBag.PageSize = 10;
+        ViewBag.TotalPages = 1;
+        ViewBag.StartPage = 1;
+        ViewBag.EndPage = 1;
+        ViewBag.ActionName = nameof(Index);
+
         var top = await purchaseService.GetTopCustomersForProduct(id, 10);
         return View(top);
     }
