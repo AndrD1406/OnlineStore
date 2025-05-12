@@ -593,3 +593,19 @@ a.link-hover:hover {
     flex-wrap: nowrap; 
     margin-bottom: 1rem;
 }
+
+.cartTable {
+    margin-top: 20px;
+}
+
+.buyButton {
+    position: fixed;
+    left: 1240px;
+    top: 50px;
+}
+
+.createUserButton {
+    position: fixed;
+    bottom: 30px;
+    right: 150px;
+}
