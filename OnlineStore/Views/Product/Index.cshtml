@@ -22,11 +22,9 @@
 <div>
 <div class="container-fluid mt-4">
     <div class="row">
-        <!-- LEFT SIDEBAR -->
         <aside class="col-md-3">
             <form id="filterForm" method="get" asp-action="Index" class="vstack gap-3">
 
-                <!-- Store select -->
                 <div>
                     <label class="form-label fw-semibold">Store</label>
                     <select name="storeId" class="form-select">
@@ -38,13 +36,11 @@
                     </select>
                 </div>
 
-                <!-- Search -->
                 <div>
                     <label class="form-label fw-semibold">Product name</label>
                     <input name="product" value="@search" class="form-control" placeholder="Search…" />
                 </div>
 
-                <!-- Price range -->
                 <div class="row g-2">
                     <div class="col-6">
                         <label class="form-label fw-semibold">Min price</label>
@@ -66,7 +62,6 @@
             </form>
         </aside>
 
-        <!-- RIGHT CARDS -->
             <main class="col-md-9">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
                     @foreach (var product in Model)
@@ -83,7 +78,6 @@
         @await Html.PartialAsync("_Pagination")
     </div>
 <style>
-    /* clamp description to 2 lines */
     .card-description {
         overflow: hidden;
         display: -webkit-box;
@@ -93,7 +87,6 @@
 </style>
 
 <script>
-    // Initialise dual-handle slider
     const slider = document.getElementById('priceSlider');
     const minDb = @minDb.ToString(System.Globalization.CultureInfo.InvariantCulture);
     const maxDb = @maxDb.ToString(System.Globalization.CultureInfo.InvariantCulture);

@@ -6,14 +6,20 @@
 
 <div class="container mt-4">
     <h1 class="mb-4">
-        Stores 
+        Stores
         @if (User.IsInRole("Admin"))
         {
             <button type="button" class="btn btn-success buttonRight" onclick="location.href='@Url.Action("Create", "Store")'">Create Store</button>
         }
-    </h1>    
+    </h1>
 
-    <!-- Сітка карточок магазинів -->
+    <div class="mb-4">
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by store name" />
+            <button type="button" id="searchBtn" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+
     <div class="row">
         @if (Model != null && Model.Any())
         {
@@ -21,25 +27,22 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <div class="card-body d-flex flex-column">                            
+                        <div class="card-body d-flex flex-column">
                             <div>
-                                <!-- Назва магазину -->
                                 <h5 class="card-title">@store.Name</h5>
-                                <!-- Кількість товарів -->
                                 <p class="card-title">
                                     Products: @(store.Products?.Count() ?? 0)
                                 </p>
                             </div>
 
-                            <!-- Дії -->
                             <div class="mt-auto">
                                 <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Details", "Store", new { storeId = store.Id })'">Details</button>
-                                
-                                @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin")
+
+                                @if (User.IsInRole("Admin"))
                                 {
                                     <button type="button" class="btn btn-warning" onclick="location.href='@Url.Action("Edit", "Store", new { id = store.Id })'">Edit</button>
                                     <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete", "Store", new { id = store.Id })'">Delete</button>
-                                }                                
+                                }
                             </div>
                         </div>
                     </div>
@@ -58,3 +61,13 @@
         @await Html.PartialAsync("_Pagination")
     </div>
 </div>
+
+<script>
+    document.getElementById('searchBtn').addEventListener('click', function () {
+        var name = document.getElementById('searchInput').value;
+        var url = '@Url.Action("Index", "Store")';
+        window.location.href = name
+            ? url + '?name=' + encodeURIComponent(name)
+            : url;
+    });
+</script>
