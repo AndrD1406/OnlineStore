@@ -12,10 +12,15 @@
         })
         .ToList();
 
+    int page = ViewBag.CurrentPage;
+    int pageSize = ViewBag.PageSize;
+
+    var fetchedItems = groupedItems.Skip((page - 1) * pageSize).Take(pageSize);
+
     var total = groupedItems.Sum(x => (x.Product?.Price ?? 0) * x.Quantity);
 }
 
-<h2>Your Cart</h2>
+<h2 style="margin-top: 30px">Your Cart</h2>
 
 @if (!groupedItems.Any())
 {
@@ -23,7 +28,7 @@
 }
 else
 {
-    <table class="table">
+    <table class="table cartTable">
         <thead>
             <tr>
                 <th>Product Name</th>
@@ -34,7 +39,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in groupedItems)
+            @foreach (var item in fetchedItems)
             {
                 <tr>
                     <td>@item.Product?.Name</td>
@@ -56,6 +61,9 @@ else
             </tr>
         </tbody>
     </table>
+    <div>
+        @await Html.PartialAsync("_Pagination")
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var errors = @Html.Raw(Json.Serialize(TempData["errors"]));
@@ -76,7 +84,7 @@ else
 {
     @if (@Model.ProductToCarts != null && Model.ProductToCarts.Count() > 0)
     {
-        <div class="addButton">
+        <div class="addButton buyButton">
             <button type="submit" class="button button-blue-back searchButton">Buy</button>
         </div>
     }
