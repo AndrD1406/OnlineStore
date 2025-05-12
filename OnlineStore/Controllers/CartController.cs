@@ -38,7 +38,7 @@ public class CartController : Controller
             cart = await _cartService.Create(new Cart { Id = Guid.NewGuid(), UserId = userId });
         }
 
-        int totalCartProducts = cart.ProductToCarts.DistinctBy(x => x.ProductId).Count();
+        int totalCartProducts = cart != null ? cart.ProductToCarts.DistinctBy(x => x.ProductId).Count() : 1;
         int totalPages = (int)Math.Ceiling((double)totalCartProducts / pageSize);
 
         int startPage = Math.Max(1, page - PAGES_RANGE_SIZE / 2);
