@@ -1,5 +1,4 @@
 ﻿@{
-    // Збираємо дані з ViewBag
     var action = ViewBag.ActionName as string ?? "Details";
     var current = (int)(ViewBag.CurrentPage ?? 1);
     var total = (int)(ViewBag.TotalPages ?? 1);
@@ -10,17 +9,14 @@
     var price = (double?)(ViewBag.PriceFilter);
 }
 
-<footer class="paginationWrapper">
     <ul class="pagination justify-content-center">
 
-        <!-- Previous -->
         <li class="page-item @(current <= 1 ? "disabled" : "")">
             <a class="page-link"
                href="@Url.Action(action, new { storeId, product = product, price = price, page = current - 1 })"
                tabindex="-1">Previous</a>
         </li>
 
-        <!-- Номери сторінок -->
         @for (int i = start; i <= end; i++)
         {
             <li class="page-item @(i == current ? "active" : "")">
@@ -31,7 +27,6 @@
             </li>
         }
 
-        <!-- Next -->
         <li class="page-item @(current >= total ? "disabled" : "")">
             <a class="page-link"
                href="@Url.Action(action, new { storeId, product = product, price = price, page = current + 1 })">
@@ -40,4 +35,3 @@
         </li>
 
     </ul>
-</footer>

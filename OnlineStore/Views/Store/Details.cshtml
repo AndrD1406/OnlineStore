@@ -14,7 +14,6 @@
 
     
 
-    <!-- Форма фільтрації товарів -->
     <form asp-action="Details" method="get" class="row g-2 mb-4">
         <input type="hidden" name="storeId" value="@ViewBag.storeId" />
         <input type="hidden" name="page" value="@ViewBag.CurrentPage" />
@@ -29,7 +28,6 @@
         </div>
     </form>
 
-    <!-- Сітка карточок товарів -->
     <div class="row">
         @if (Model.Products != null && Model.Products.Any())
         {
@@ -66,7 +64,6 @@
         }
     </div>
 
-    <!-- Пагінація -->
     @Html.Partial("_Pagination")
 </div>
 

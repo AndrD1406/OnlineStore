@@ -24,9 +24,15 @@ public class StoreController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(int page = 1, int pageSize = 9)
+    public async Task<IActionResult> Index(string? name, int page = 1, int pageSize = 9)
     {
-        int totalStores = await storeService.Count(x => true);
+        ViewBag.Name = name;
+
+        Expression<Func<Store, bool>> filter = x =>
+            string.IsNullOrEmpty(name)
+            || (x.Name != null && x.Name.ToLower().Contains(name.ToLower()));
+
+        int totalStores = await storeService.Count(filter);
         int totalPages = (int)Math.Ceiling((double)totalStores / pageSize);
 
         int startPage = Math.Max(1, page - 2);
@@ -39,15 +45,7 @@ public class StoreController : Controller
         ViewBag.EndPage = endPage;
         ViewBag.ActionName = nameof(Index);
 
-        ViewBag.RouteValues = new Dictionary<string, object>
-        {
-            ["min"] = ViewBag.min,
-            ["max"] = ViewBag.max,
-            ["storeId"] = ViewBag.storeId
-        };
-
-
-        var stores = await storeService.Filter(x => true, page, pageSize);
+        var stores = await storeService.Filter(filter, page, pageSize);
         return View(stores);
     }
 
@@ -175,19 +173,16 @@ public class StoreController : Controller
         return View(model);
     }
 
-    // GET: /Store/DeleteProduct?storeId={storeId}&productId={productId}
     [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> DeleteProduct(Guid storeId, Guid productId)
     {
-        // Перевіряємо, що магазин існує
         var store = await storeService.Get(storeId);
         if (store == null)
         {
             return NotFound($"Store with id {storeId} not found");
         }
 
-        // Шукаємо товар у цьому магазині
         var products = await productService.Filter(p => p.Id == productId && p.StoreId == storeId);
         var product = products.FirstOrDefault();
         if (product == null)
@@ -195,10 +190,8 @@ public class StoreController : Controller
             return NotFound($"Product with id {productId} not found in this store");
         }
 
-        // Видаляємо товар
         await productService.Delete(productId);
 
-        // Повертаємося на Details магазину
         return RedirectToAction(nameof(Details), new { storeId = storeId });
     }
 
