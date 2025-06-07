@@ -15,7 +15,7 @@ namespace OnlineStore.Controllers;
 [Route("[controller]/[action]")]
 public class ProductController : Controller
 {
-	private const int PAGES_RANGE_SIZE = 9;
+	private const int PAGES_RANGE_SIZE = 6;
 	private readonly IProductService productService;
 	private readonly IStoreService storeService;
 	private readonly IPurchaseService purchaseService;
