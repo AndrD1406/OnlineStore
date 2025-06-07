@@ -53,10 +53,9 @@ deploy:
       uses: azure/login@v2
       with:
         auth-type: service_principal      # explicitly choose SP auth
-        client-id:       ${{ secrets.AZURE_CLIENT_ID }}
-        client-secret:   ${{ secrets.AZURE_CLIENT_SECRET }}
-        tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id:       ${{ secrets.AZUREAPPSERVICE_CLIENTID_E4A6488967DC45359C77417EF8E70E69 }}
+        tenant-id:       ${{ secrets.AZUREAPPSERVICE_TENANTID_F433E11EE2A54D0E8930BABD177E1151 }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_18E2E61400EB4AA9A0B0295DFF51D4D7 }}
 
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
