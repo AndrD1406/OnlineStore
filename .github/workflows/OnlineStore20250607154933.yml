@@ -6,13 +6,14 @@ on:
       - develop
 
 env:
-  AZURE_WEBAPP_NAME:       OnlineStore20250607154933
-  AZURE_WEBAPP_PACKAGE_PATH: OnlineStore/published     # use forward-slashes
-  CONFIGURATION:          Release
-  DOTNET_CORE_VERSION:    8.0.x
-  WORKING_DIRECTORY:      OnlineStore
+  AZURE_WEBAPP_NAME:        OnlineStore20250607154933
+  AZURE_WEBAPP_PACKAGE_PATH: OnlineStore/published
+  CONFIGURATION:           Release
+  DOTNET_CORE_VERSION:     8.0.x
+  WORKING_DIRECTORY:       OnlineStore
 
 jobs:
+
   build:
     runs-on: windows-latest
     permissions:
@@ -27,23 +28,16 @@ jobs:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
       - name: Restore
-        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+        run: dotnet restore ${{ env.WORKING_DIRECTORY }}
 
       - name: Build
-        run: dotnet build "${{ env.WORKING_DIRECTORY }}" \
-              --configuration ${{ env.CONFIGURATION }} \
-              --no-restore
+        run: dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-restore
 
       - name: Test
-        run: dotnet test "OnlineStore.Tests/OnlineStore.Tests.csproj" \
-              --configuration ${{ env.CONFIGURATION }} \
-              --verbosity normal
+        run: dotnet test OnlineStore.Tests/OnlineStore.Tests.csproj --configuration ${{ env.CONFIGURATION }} --verbosity normal
 
       - name: Publish
-        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" \
-              --configuration ${{ env.CONFIGURATION }} \
-              --no-build \
-              --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+        run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
