@@ -1,75 +1,67 @@
 name: Build and deploy .NET Core application to Web App OnlineStore20250607154933
-
 on:
   push:
     branches:
-      - develop
-
+    - develop
 env:
-  AZURE_WEBAPP_NAME:         OnlineStore20250607154933
-  AZURE_WEBAPP_PACKAGE_PATH: OnlineStore/published
-  CONFIGURATION:            Release
-  DOTNET_CORE_VERSION:      8.0.x
-  WORKING_DIRECTORY:        OnlineStore
-
+  AZURE_WEBAPP_NAME: OnlineStore20250607154933
+  AZURE_WEBAPP_PACKAGE_PATH: OnlineStore\published
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: OnlineStore
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: read
-
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-      - name: Restore
-        run: dotnet restore ${{ env.WORKING_DIRECTORY }}
-      - name: Build
-        run: dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-restore
-      - name: Test
-        run: dotnet test OnlineStore.Tests/OnlineStore.Tests.csproj --configuration ${{ env.CONFIGURATION }} --verbosity normal
-      - name: Publish
-        run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-      - name: Publish Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: webapp
-          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    - uses: actions/checkout@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Restore
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+    - name: Build
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Test
+      run: dotnet test --verbosity normal
+            
+    - name: Publish
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+deploy:
+  runs-on: windows-latest
+  needs: build
+  environment:
+    name: Production
+    url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  permissions:
+    id-token: write
+    contents:  read
 
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: "Production"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write
-      contents: read
+  steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v4
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: webapp
-          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        auth-type: service_principal      # explicitly choose SP auth
+        client-id:       ${{ secrets.AZURE_CLIENT_ID }}
+        client-secret:   ${{ secrets.AZURE_CLIENT_SECRET }}
+        tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          auth-type: service_principal
-          client-id:       ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id:       ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
-          client-secret:   ${{ secrets.AZUREAPPSERVICE_CLIENTSECRET }}
-
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name:    ${{ env.AZURE_WEBAPP_NAME }}
-          slot-name:   Production
-          package:     ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
-
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name:    ${{ env.AZURE_WEBAPP_NAME }}
+        slot-name:   Production
+        package:     ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
