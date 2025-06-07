@@ -8,7 +8,7 @@
     var product = ViewBag.ProductFilter as string;
     var price = (double?)(ViewBag.PriceFilter);
 }
-
+    <div class="paginationWrapper">
     <ul class="pagination justify-content-center">
 
         <li class="page-item @(current <= 1 ? "disabled" : "")">
@@ -34,4 +34,5 @@
             </a>
         </li>
 
-    </ul>
+	</ul>
+</div>
