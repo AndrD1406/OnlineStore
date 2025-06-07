@@ -6,14 +6,13 @@ on:
       - develop
 
 env:
-  AZURE_WEBAPP_NAME:        OnlineStore20250607154933
+  AZURE_WEBAPP_NAME:         OnlineStore20250607154933
   AZURE_WEBAPP_PACKAGE_PATH: OnlineStore/published
-  CONFIGURATION:           Release
-  DOTNET_CORE_VERSION:     8.0.x
-  WORKING_DIRECTORY:       OnlineStore
+  CONFIGURATION:            Release
+  DOTNET_CORE_VERSION:      8.0.x
+  WORKING_DIRECTORY:        OnlineStore
 
 jobs:
-
   build:
     runs-on: windows-latest
     permissions:
@@ -21,24 +20,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-
       - name: Restore
         run: dotnet restore ${{ env.WORKING_DIRECTORY }}
-
       - name: Build
         run: dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-restore
-
       - name: Test
         run: dotnet test OnlineStore.Tests/OnlineStore.Tests.csproj --configuration ${{ env.CONFIGURATION }} --verbosity normal
-
       - name: Publish
         run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -65,11 +58,7 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          auth-type: service_principal
-          client-id:       ${{ secrets.AZURE_CLIENT_ID }}
-          client-secret:   ${{ secrets.AZURE_CLIENT_SECRET }}
-          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          creds: ${{ secrets.AZURE_SDK_AUTH }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
