@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - master
 
 env:
   AZURE_WEBAPP_NAME:         OnlineStore20250607154933
